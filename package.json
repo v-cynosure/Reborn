@@ -7,11 +7,16 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel ./client/public/index.html",
-    "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'"
+    "tsc": "tsc --watch",
+    "serve": "nodemon /server/dist/index",
+    "build": "parcel build client/public/index.html --public-url ./",
+    "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'",
+    "format": "prettier --write --config .prettierrc client/* server/*"
   },
   "dependencies": {
     "@types/react": "^16.0.40",
     "autoprefixer": "^8.1.0",
+    "koa": "^2.5.0",
     "node-sass": "^4.7.2",
     "postcss-modules": "^1.1.0",
     "posthtml-img-autosize": "^0.1.2",
@@ -21,9 +26,11 @@
     "styled-reset": "^1.2.0"
   },
   "devDependencies": {
+    "@types/node": "^9.4.7",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "parcel-bundler": "^1.6.2",
+    "prettier": "^1.11.1",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   }
