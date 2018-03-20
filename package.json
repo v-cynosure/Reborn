@@ -6,7 +6,9 @@
   "author": "Vickie",
   "license": "MIT",
   "scripts": {
-    "start": "parcel ./client/public/index.html"
+    "start": "parcel ./client/public/index.html",
+    "build": "parcel build client/public/index.html --public-url ./",
+    "format": "prettier --write --config .prettierrc client/*.js server/*.js"
   },
   "dependencies": {
     "autoprefixer": "^8.1.0",
@@ -20,6 +22,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "parcel-bundler": "^1.6.2",
+    "prettier": "^1.11.1",
     "typescript": "^2.7.2"
   }
 }
