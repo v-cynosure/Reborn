@@ -11,11 +11,13 @@
     "serve": "nodemon /server/dist/index",
     "build": "parcel build client/public/index.html --public-url ./",
     "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'",
-    "format": "prettier --write --config .prettierrc client/* server/*"
+    "format": "prettier --write --config .prettierrc client/src/**/*{.ts,.tsx} server/**/*"
   },
   "dependencies": {
     "@types/react": "^16.0.40",
     "autoprefixer": "^8.1.0",
+    "classnames": "^2.2.5",
+    "global": "^4.3.2",
     "koa": "^2.5.0",
     "node-sass": "^4.7.2",
     "postcss-modules": "^1.1.0",
