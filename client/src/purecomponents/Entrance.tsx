@@ -131,7 +131,12 @@ export interface EntranceProps {
     validities?: object
 }
 
-class Entrance extends React.Component<EntranceProps, {}> {
+export interface EntranceState {
+    isUsernameValid?: boolean
+    isPasswordValid?: boolean
+}
+
+class Entrance extends React.Component<EntranceProps, EntranceState> {
     static defaultProps = {
         title: 'Paper crane',
         logo: true,
@@ -146,7 +151,7 @@ class Entrance extends React.Component<EntranceProps, {}> {
         validities: {
             username: {
                 pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/,
-                msg: '只能输入5-20个以字母开头、可带数字、“_”、“.”的字串',
+                msg: '输入5-20个字母开头带数字、“_”、“.”的字符串',
             },
             password: {
                 pattern: /^(\w){6,20}$/,
@@ -157,13 +162,53 @@ class Entrance extends React.Component<EntranceProps, {}> {
 
     constructor(props) {
         super(props)
+        this.state = {
+            isUsernameValid: null,
+            isPasswordValid: null,
+        }
+        this.handleFocus = this.handleFocus.bind(this)
         this.handleBlur = this.handleBlur.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleFocus(e) {
+        const { validities } = this.props
+        const { target } = e
+        const { name, value } = target
+        const statusType = {
+            username: 'isUsernameValid',
+            password: 'isPasswordValid',
+        }[name]
+        this.setState({
+            [statusType]: null,
+        })
     }
 
     handleBlur(e) {
         const { validities } = this.props
         const { target } = e
-        const { value } = target
+        const { name, value } = target
+        const statusType = {
+            username: 'isUsernameValid',
+            password: 'isPasswordValid',
+        }[name]
+        const validity = validities[name]
+        if (!validity.pattern.test(value)) {
+            this.setState({
+                [statusType]: false,
+            })
+        } else {
+            this.setState({
+                [statusType]: true,
+            })
+        }
+    }
+
+    handleSubmit(e) {
+        e.preventDefault()
+        const { onSubmit } = this.props
+        const { isUsernameValid, isPasswordValid } = this.state
+        isUsernameValid && isPasswordValid && onSubmit && onSubmit(e)
     }
 
     render() {
@@ -182,10 +227,14 @@ class Entrance extends React.Component<EntranceProps, {}> {
             primary2Color,
             primary3Color,
             onSubmit,
+            validities,
         } = this.props
+        const { isUsernameValid, isPasswordValid } = this.state
         return (
             <EntranceWrapper style={style}>
-                <EntranceForm theme={{ primary1Color }} onSubmit={onSubmit}>
+                <EntranceForm
+                    theme={{ primary1Color }}
+                    onSubmit={this.handleSubmit}>
                     <span>{title.toUpperCase()}</span>
                     {logo && (
                         <span>
@@ -196,7 +245,12 @@ class Entrance extends React.Component<EntranceProps, {}> {
                         fullWidth
                         type="text"
                         name="username"
+                        onFocus={this.handleFocus}
                         onBlur={this.handleBlur}
+                        errorText={
+                            isUsernameValid === false &&
+                            validities['username']['msg']
+                        }
                         floatingLabelText={usernameText}
                         floatingLabelStyle={{ top: '30px' }}
                         floatingLabelFocusStyle={{
@@ -206,7 +260,7 @@ class Entrance extends React.Component<EntranceProps, {}> {
                         }}
                         underlineFocusStyle={
                             primary1Color
-                                ? { borderBottom: `2px solid ${primary1Color}` }
+                                ? { borderColor: primary1Color }
                                 : null
                         }
                     />
@@ -215,6 +269,12 @@ class Entrance extends React.Component<EntranceProps, {}> {
                         fullWidth
                         type="password"
                         name="password"
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        errorText={
+                            isPasswordValid === false &&
+                            validities['password']['msg']
+                        }
                         floatingLabelText={passwordText}
                         floatingLabelStyle={{ top: '30px' }}
                         floatingLabelFocusStyle={{
@@ -224,7 +284,7 @@ class Entrance extends React.Component<EntranceProps, {}> {
                         }}
                         underlineFocusStyle={
                             primary1Color
-                                ? { borderBottom: `2px solid ${primary1Color}` }
+                                ? { borderColor: primary1Color }
                                 : null
                         }
                     />

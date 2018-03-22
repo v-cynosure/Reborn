@@ -11,14 +11,10 @@ class Login extends React.Component {
             primary2Color: '#a18cd1',
             primary3Color: '#fbc2eb',
             onSubmit: function(e) {
-                e.preventDefault()
                 const { target } = e
                 const username = target.username.value
                 const password = target.password.value
-                axios.post('http://wsmis126:9000/api/register', {
-                    username,
-                    password,
-                })
+                console.log('signin')
             },
         }
         return <Entrance {...props} />

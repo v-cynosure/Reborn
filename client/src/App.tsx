@@ -73,8 +73,8 @@ const App = () => {
                     <Search placeholder="千纸鹤" />
                 </HeaderRight>
             </Header> */}
-            <Login />
-            {/* <Register /> */}
+            {/* <Login /> */}
+            <Register />
         </MuiThemeProvider>
     )
 }

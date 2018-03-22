@@ -58,17 +58,31 @@
 
 例如登陆、注册页面的入口组件
 
-| 参数          | 说明                    | 类型        | 默认值            |
-| ------------- | ----------------------- | ----------- | ----------------- |
-| style         | 根节点样式              | object      |                   |
-| title         | 标题                    | string      | Paper crane(大写) |
-| logo          | 是否需要 logo           | boolean     | true              |
-| logoLetter    | logo 显示的字母         | string      | X(大写)           |
-| usernameText  | 用户名提示语            | string      | Username          |
-| passwordText  | 密码提示语              | string      | Password          |
-| btnText       | 按钮文字                | string      | Login(大写)       |
-| sign          | 底部提示语              | string      |                   |
-| primary1Color | title、logo、下划线颜色 | string      | #333              |
-| primary2Color | btn 渐变色 1            | string      | #21d4fd           |
-| primary3Color | btn 渐变色 2            | string      | #b721ff           |
-| onSubmit      | 提交的处理函数          | function(e) | 无                |
+| 参数          | 说明                               | 类型        | 默认值            |
+| ------------- | ---------------------------------- | ----------- | ----------------- |
+| style         | 根节点样式                         | object      |                   |
+| title         | 标题                               | string      | Paper crane(大写) |
+| logo          | 是否需要 logo                      | boolean     | true              |
+| logoLetter    | logo 显示的字母                    | string      | X(大写)           |
+| usernameText  | 用户名提示语                       | string      | Username          |
+| passwordText  | 密码提示语                         | string      | Password          |
+| btnText       | 按钮文字                           | string      | Login(大写)       |
+| sign          | 底部提示语                         | string      |                   |
+| primary1Color | title、logo、下划线颜色            | string      | #333              |
+| primary2Color | btn 渐变色 1                       | string      | #21d4fd           |
+| primary3Color | btn 渐变色 2                       | string      | #b721ff           |
+| onSubmit      | 提交的处理函数                     | function(e) | 无                |
+| validities    | 判断密码和用户名的正则以及错误信息 | object      | 见下方            |
+
+```javascript
+const validities = {
+    username: {
+        pattern: /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/,
+        msg: '输入5-20个字母开头带数字、“_”、“.”的字符串',
+    },
+    password: {
+        pattern: /^(\w){6,20}$/,
+        msg: '只能输入6-20个字母、数字、下划线',
+    },
+}
+```
