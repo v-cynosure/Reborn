@@ -46,7 +46,7 @@ const SearchInput = styled.input`
     ${media.phone`
         width: 100px;
         &:focus {
-            width:100px;
+            width:150px;
         }
     `};
 `

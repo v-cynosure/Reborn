@@ -54,8 +54,21 @@
 | ----- | ---------- | ------ | ------ |
 | style | 根节点样式 | object |        |
 
-### Dropdown
+### Entrance
 
-| 参数  | 说明       | 类型   | 默认值 |
-| ----- | ---------- | ------ | ------ |
-| style | 根节点样式 | object |        |
+例如登陆、注册页面的入口组件
+
+| 参数          | 说明                    | 类型        | 默认值            |
+| ------------- | ----------------------- | ----------- | ----------------- |
+| style         | 根节点样式              | object      |                   |
+| title         | 标题                    | string      | Paper crane(大写) |
+| logo          | 是否需要 logo           | boolean     | true              |
+| logoLetter    | logo 显示的字母         | string      | X(大写)           |
+| usernameText  | 用户名提示语            | string      | Username          |
+| passwordText  | 密码提示语              | string      | Password          |
+| btnText       | 按钮文字                | string      | Login(大写)       |
+| sign          | 底部提示语              | string      |                   |
+| primary1Color | title、logo、下划线颜色 | string      | #333              |
+| primary2Color | btn 渐变色 1            | string      | #21d4fd           |
+| primary3Color | btn 渐变色 2            | string      | #b721ff           |
+| onSubmit      | 提交的处理函数          | function(e) | 无                |
