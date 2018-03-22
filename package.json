@@ -12,12 +12,15 @@
     "serve": "nodemon server/dist/index.js",
     "build": "parcel build client/public/index.html --public-url ./",
     "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'",
-    "format": "prettier --write --config .prettierrc client/* server/*"
+    "format": "prettier --write --config .prettierrc client/src/**/*{.ts,.tsx} server/**/*"
   },
   "dependencies": {
     "@types/koa": "^2.0.44",
+    "@types/react": "^16.0.40",
     "autoprefixer": "^8.1.0",
     "axios": "^0.18.0",
+    "classnames": "^2.2.5",
+    "global": "^4.3.2",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-logger": "^3.2.0",
@@ -26,11 +29,15 @@
     "koa-session-minimal": "^3.0.4",
     "md5": "^2.2.1",
     "mongoose": "^5.0.11",
+    "material-ui": "^0.20.0",
+    "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.7.2",
     "postcss-modules": "^1.1.0",
     "posthtml-img-autosize": "^0.1.2",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "styled-components": "^3.2.3",
+    "styled-reset": "^1.2.0"
   },
   "devDependencies": {
     "@types/koa-bodyparser": "^4.2.0",
