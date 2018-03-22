@@ -4,13 +4,11 @@ const cors = require('@koa/cors')
 const jwt = require('koa-jwt')
 const koaLogger = require('koa-logger')
 const bodyParser = require('koa-bodyparser')
-// const session = require('koa-session')
-// const session = require('koa-session-minimal')
 const mongoose = require('mongoose')
 
 const app = new Koa()
 const config = require('../config/default')
-const userRouter = require('../rest/routes/user')
+const userRouter = require('../rest/api/user')
 // const indexRouter = require('../rest/routes/indexRoute')
 const SessionStore = require('../rest/middlewares/sessionStore')
 
@@ -24,13 +22,13 @@ app.use(cors({
 }))
 
 // check token
-// app.use(
-//     jwt({
-//         secret: config.secret,
-//     }).unless({
-//         path: [/\/api\/register/, /\/api\/login/],
-//     })
-// )
+app.use(
+    jwt({
+        secret: config.secret,
+    }).unless({
+        path: [/\/api\/register/, /\/api\/login/],
+    })
+)
 
 // log
 app.use(koaLogger())

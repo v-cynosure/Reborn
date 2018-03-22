@@ -4,6 +4,7 @@
   "singleQuote": true,
   "trailingComma": "es5",
   "jsxBracketSameLine": true,
+  "bracketSpacing": true,
   "overrides": [
     {
       "files": "*.html",

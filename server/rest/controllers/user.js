@@ -10,16 +10,12 @@ class UserController {
         let isUserExit = await UserModel.findOne({ username })
 
         // 用户已经存在
-        // if (isUserExit) {
-        //     ctx.status = 406
-        //     ctx.body = {
-        //         message: '该用户已存在，请使用密码登录',
-        //     }
-        //     return
-        //     // return ctx.throw(400, '该用户已存在')
-        // }
-
-        ctx.assert(!isUserExit, 401, '该用户已存在，请使用密码登录')
+        if (isUserExit) {
+            return ctx.body = {
+                code: 406,
+                message: '该用户已存在，请使用密码登录',
+            }
+        }
 
         // 创建新用户
         const result = await UserModel.create({
@@ -27,8 +23,9 @@ class UserController {
             email,
             password: md5(password),
         })
-        ctx.status = 200
+
         ctx.body = {
+            code: 200,
             message: '注册成功',
             user: username,
         }
@@ -50,10 +47,14 @@ class UserController {
             username,
             password: md5(password),
         })
-        ctx.assert(user, 403, '请检查用户名和密码')
-        // if (!user) {
-        //     return ctx.throw(403, '请检查用户名和密码')
-        // }
+
+        if (!user) {
+            return ctx.body = {
+                code: 403,
+                message: '请检查用户名和密码',
+            }
+        }
+
         ctx.status = 200
         ctx.body = {
             message: '登录成功',
@@ -71,7 +72,9 @@ class UserController {
     // 用户退出
     static async logout(ctx) {
         // await ……
-        const token = ctx.header.authorization
+        // const token = ctx.header.authorization
+        const token = ctx.state.user
+        console.log(token)
         if (token) {
             ctx.body = '已经有token了'
         } else {

@@ -1,5 +1,6 @@
 module.exports = {
     port: 9000,
+    baseApi: 'api',
     token: {
         secret: 'xfiles-reborn',
         exp: 2592000000,
