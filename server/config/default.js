@@ -1,9 +1,13 @@
 module.exports = {
-    port: 3333,
-    session: {
+    port: 9000,
+    token: {
         secret: 'xfiles-reborn',
-        key: 'xfiles-reborn',
-        maxAge: 2592000000,
+        exp: 2592000000,
     },
-    mongodb: 'mongodb://localhost:27017/reborn'
+    // session: {
+    //     secret: 'xfiles-reborn',
+    //     key: 'xfiles-reborn',
+    //     maxAge: 2592000000,
+    // },
+    mongodb: 'mongodb://localhost:27017/reborn',
 }

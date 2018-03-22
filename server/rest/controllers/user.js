@@ -1,4 +1,6 @@
 const md5 = require('md5')
+const config = require('../../config/default')
+const jsonwebtoken = require('jsonwebtoken')
 const UserModel = require('../models/user')
 
 class UserController {
@@ -7,15 +9,17 @@ class UserController {
         const { username, email, password } = ctx.request.body
         let isUserExit = await UserModel.findOne({ username })
 
-        // 用户名, 密码为空
-        if (!username || !password) {
-            return ctx.throw(400, '请输入用户名和密码')
-        }
-
         // 用户已经存在
-        if (isUserExit) {
-            return ctx.throw(400, '该用户已存在')
-        }
+        // if (isUserExit) {
+        //     ctx.status = 406
+        //     ctx.body = {
+        //         message: '该用户已存在，请使用密码登录',
+        //     }
+        //     return
+        //     // return ctx.throw(400, '该用户已存在')
+        // }
+
+        ctx.assert(!isUserExit, 401, '该用户已存在，请使用密码登录')
 
         // 创建新用户
         const result = await UserModel.create({
@@ -23,10 +27,11 @@ class UserController {
             email,
             password: md5(password),
         })
-        if (!result) {
-            return ctx.throw(400, '该用户已存在')
+        ctx.status = 200
+        ctx.body = {
+            message: '注册成功',
+            user: username,
         }
-        return ctx.throw(200, '注册成功')
     }
 
     // 用户登录
@@ -34,32 +39,44 @@ class UserController {
         // await ……
         const { username, password } = ctx.request.body
 
-        if (ctx.session.user) {
-            return ctx.body = `${ctx.session.user} 已登录，请勿重复登录`
-        } else {
-            console.log(ctx.session.user)
-            return ctx.body = ctx.session.user
-        }
+        // if (ctx.session.user) {
+        //     return (ctx.body = `${ctx.session.user} 已登录，请勿重复登录`)
+        // } else {
+        //     console.log(ctx.session.user)
+        //     return (ctx.body = ctx.session.user)
+        // }
 
-        // 用户名, 密码为空
-        if (!username || !password) {
-            return ctx.throw(400, '请输入用户名和密码')
-        }
-
-        const isFind = await UserModel.findOne({
+        const user = await UserModel.findOne({
             username,
             password: md5(password),
         })
-        if (!isFind) {
-            return ctx.throw(403, '请检查用户名和密码')
+        ctx.assert(user, 403, '请检查用户名和密码')
+        // if (!user) {
+        //     return ctx.throw(403, '请检查用户名和密码')
+        // }
+        ctx.status = 200
+        ctx.body = {
+            message: '登录成功',
+            user: username,
+            token: jsonwebtoken.sign(
+                {
+                    user,
+                    exp: config.token.exp,
+                },
+                config.token.secret
+            ),
         }
-        return ctx.throw(200, '登录成功')
     }
 
     // 用户退出
     static async logout(ctx) {
         // await ……
-        ctx.body = 'logout'
+        const token = ctx.header.authorization
+        if (token) {
+            ctx.body = '已经有token了'
+        } else {
+            ctx.body = '没有找到token'
+        }
     }
 
     // 更新用户资料

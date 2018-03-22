@@ -15,11 +15,14 @@
     "format": "prettier --write --config .prettierrc client/* server/*"
   },
   "dependencies": {
+    "@koa/cors": "2",
     "@types/koa": "^2.0.44",
     "autoprefixer": "^8.1.0",
     "axios": "^0.18.0",
+    "jsonwebtoken": "^8.2.0",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-jwt": "^3.3.1",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-session": "^5.8.1",
