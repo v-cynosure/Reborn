@@ -5,7 +5,7 @@ export interface XProps {}
 
 const XWrapper = styled.div``
 
-class Template extends React.Component<XProps, {}> {
+class X extends React.Component<XProps, {}> {
     static defaultProps = {}
 
     render() {
@@ -13,4 +13,4 @@ class Template extends React.Component<XProps, {}> {
     }
 }
 
-export default Template
+export default X

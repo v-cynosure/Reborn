@@ -1,8 +1,0 @@
-// export { default as Layout } from './Layout'
-// export { default as Header } from './Header'
-// export { HeaderLeft, HeaderRight } from './Header'
-export { default as Logo } from './Logo'
-export { default as Menu } from './Menu'
-export { default as MenuItem } from './MenuItem'
-export { default as Search } from './Search'
-export { default as Entrance } from './Entrance'

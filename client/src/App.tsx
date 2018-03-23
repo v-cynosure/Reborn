@@ -17,12 +17,11 @@ import {
 import { fade } from 'material-ui/utils/colorManipulator'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-// import { AppBar } from './layout'
-// import { Entrance } from './layout'
 
-// import { Logo, Menu, MenuItem, Search } from './purecomponents'
-// import { Header, HeaderLeft, HeaderRight } from './layout'
-import { Login, Register } from './components'
+import { Home, Login, Register } from './pages'
+
+import { Center } from './layout'
+import { UploadImage } from './components'
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -48,33 +47,29 @@ const muiTheme = getMuiTheme({
 
 const baseStyles = () => injectGlobal`
     ${reset}
+    html, body, #root, .container {
+        height: 100%;
+    }
+    div {
+        word-wrap:break-word;
+    }
     input:-webkit-autofill, 
     textarea:-webkit-autofill, 
     select:-webkit-autofill { 
         box-shadow: 0 0 0 1000px white inset; 
-    }    
+    }
 `
 
 const App = () => {
     baseStyles()
     return (
         <MuiThemeProvider muiTheme={muiTheme}>
-            {/* <Header>
-                <HeaderLeft>
-                    <Logo src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEbKPGmTMDZlwbkRuDLmOLS5a9tSjxQ2oMcIyxLim7avWvr221w" />
-                    <Menu>
-                        <MenuItem>HOME</MenuItem>
-                        <MenuItem>ABOUT</MenuItem>
-                        <MenuItem>BLOG</MenuItem>
-                        <MenuItem>CONTACT</MenuItem>
-                    </Menu>
-                </HeaderLeft>
-                <HeaderRight>
-                    <Search placeholder="千纸鹤" />
-                </HeaderRight>
-            </Header> */}
-            {/* <Login /> */}
-            <Register />
+            <div className="container">
+                <div>dispaly</div>
+                <Center>
+                    <UploadImage />
+                </Center>
+            </div>
         </MuiThemeProvider>
     )
 }

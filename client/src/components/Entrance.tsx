@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import TextField from 'material-ui/TextField'
 import { Button } from '../styles/default'
+import media from '../utils/mediaquery'
 
 const EntranceWrapper = styled.div`
     position: relative
@@ -13,6 +14,9 @@ const EntranceWrapper = styled.div`
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+    ${media.tablet`
+        box-shadow: 0 0 0 0 #fff;
+    `};
 `
 
 const EntranceForm = styled.form`

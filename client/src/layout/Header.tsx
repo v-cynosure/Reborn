@@ -1,18 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import media from '../utils/mediaquery'
-import { Logo, Menu, Search, Dropdown } from './index'
 
 export interface HeaderProps {
     style?: object
     logo?: string
     children?: React.ReactNode
-}
-
-export interface HeaderInnerProps {
-    media?: {
-        desktop?: number
-    }
 }
 
 const HeaderWrapper = styled.div`
@@ -31,9 +24,6 @@ const HeaderInner = styled.div`
         width: 960px;
     `};
     ${media.tablet`
-        width: 100%;
-    `};
-    ${media.phone`
         width: 100%;
     `};
 `
