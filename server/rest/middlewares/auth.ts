@@ -3,7 +3,7 @@ import * as jwt from 'koa-jwt'
 import * as jsonwebtoken from 'jsonwebtoken'
 import config from '../../config/dev'
 
-export const signToken = (user: any) => {
+export const signToken = (user: string) => {
     return jsonwebtoken.sign(
         {
             user,
