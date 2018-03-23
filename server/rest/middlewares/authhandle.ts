@@ -1,5 +1,7 @@
-const errorHandle = (ctx, next) => {
-    return next().catch(err => {
+import * as Koa from 'koa'
+
+const authHandle = (ctx: Koa.Context, next:any) => {
+    return next().catch((err: any) => {
         if (err.status === 401) {
             ctx.status = 401
             ctx.body = {
@@ -13,4 +15,4 @@ const errorHandle = (ctx, next) => {
     })
 }
 
-module.exports = errorHandle
+export default authHandle

@@ -1,18 +1,45 @@
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
+import * as jwt from 'koa-jwt'
+import * as cors from 'kcors'
+import * as koaLogger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
-import * as session from 'koa-session-minimal'
+import config from './config/dev'
+import {
+    initMongodb,
+    verifyToken,
+    authHandle
+} from './rest/middlewares'
+
+import api from './rest/api/'
 
 const app = new Koa()
-const router = new Router()
 
-router.get('/*', async ctx => {
-    ctx.body = 'Hello World!'
-})
+// mongoose
+initMongodb(config.mongodb)
 
+// cors
+app.use(
+    cors({
+        origin: config.cors.origin,
+        credentials: config.cors.credentials,
+    })
+)
+
+// check token
+verifyToken(app, authHandle)
+
+// log
+app.use(koaLogger())
+
+// body parse
 app.use(bodyParser())
-app.use(router.routes())
+
+// implement all api
+api(app)
 
 app.listen(3333)
 
-console.log('Server running on port 3000')
+app.listen(config.port, () => {
+    console.log(`✅ The server is running at http://localhost:${config.port}/`)
+})

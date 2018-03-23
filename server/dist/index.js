@@ -1,62 +1,30 @@
-const Koa = require('koa')
-const Router = require('koa-router')
-const cors = require('@koa/cors')
-const jwt = require('koa-jwt')
-const koaLogger = require('koa-logger')
-const bodyParser = require('koa-bodyparser')
-const mongoose = require('mongoose')
-
-const app = new Koa()
-const config = require('../config/default')
-const userRouter = require('../rest/api/user')
-// const indexRouter = require('../rest/routes/indexRoute')
-const SessionStore = require('../rest/middlewares/sessionStore')
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Koa = require("koa");
+const cors = require("kcors");
+const koaLogger = require("koa-logger");
+const bodyParser = require("koa-bodyparser");
+const dev_1 = require("./config/dev");
+const middlewares_1 = require("./rest/middlewares");
+const _1 = require("./rest/api/");
+const app = new Koa();
 // mongoose
-mongoose.connect(config.mongodb)
-
+middlewares_1.initMongodb(dev_1.default.mongodb);
 // cors
 app.use(cors({
-    origin: '*',
-    credentials: true,
-}))
-
+    origin: dev_1.default.cors.origin,
+    credentials: dev_1.default.cors.credentials,
+}));
 // check token
-app.use(
-    jwt({
-        secret: config.secret,
-    }).unless({
-        path: [/\/api\/register/, /\/api\/login/],
-    })
-)
-
+middlewares_1.verifyToken(app, middlewares_1.authHandle);
 // log
-app.use(koaLogger())
-
+app.use(koaLogger());
 // body parse
-app.use(bodyParser())
-
-// session
-// app.use(session({
-//     key: config.session.key,
-//     maxAge: config.session.maxAge,
-//     overwrite: true,
-//     httpOnly: true,
-//     signed: true,
-//     rolling: false,
-//     store: new SessionStore({
-//         collection: 'users', //数据库集合
-//         connection: mongoose,     // 数据库链接实例
-//         expires: 86400, // 默认时间为1天
-//         name: 'session' // 保存session的表名称
-//     })
-// }, app))
-
-// router
-app.use(userRouter.routes()).use(userRouter.allowedMethods())
-// .use(indexRouter.routes())
-// .use(indexRouter.allowedMethods())
-
-app.listen(config.port, () => {
-    console.log(`✅ The server is running at http://localhost:${config.port}/`)
-})
+app.use(bodyParser());
+// implement all api
+_1.default(app);
+app.listen(3333);
+app.listen(dev_1.default.port, () => {
+    console.log(`✅ The server is running at http://localhost:${dev_1.default.port}/`);
+});
+//# sourceMappingURL=index.js.map

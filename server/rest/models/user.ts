@@ -1,8 +1,13 @@
 // sign up and login user
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import * as Mongoose from 'mongoose'
 
-const UserSchema = new Schema({
+interface IUser extends Mongoose.Document {
+    username: string
+    email: string
+    password: string
+}
+
+const UserSchema = new Mongoose.Schema({
     username: {
         type: String,
         unique: true,
@@ -21,6 +26,6 @@ const UserSchema = new Schema({
     }
 })
 
-const UserModel = mongoose.model('User', UserSchema)
+const UserModel = Mongoose.model<IUser>('User', UserSchema)
 
-module.exports = UserModel
+export default UserModel

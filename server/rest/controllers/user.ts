@@ -1,27 +1,27 @@
-const md5 = require('md5')
-const config = require('../../config/default')
-const jsonwebtoken = require('jsonwebtoken')
-const UserModel = require('../models/user')
+import * as Koa from 'koa'
+import * as bcrypt from 'bcrypt'
+import * as jsonwebtoken from 'jsonwebtoken'
+import config from '../../config/dev';
+import UserModel from '../models/user'
 
 class UserController {
-    // 用户注册
-    static async register(ctx) {
+    static async register(ctx: Koa.Context) {
+        let enhancePassword = null
         const { username, email, password } = ctx.request.body
-        let isUserExit = await UserModel.findOne({ username })
+        const isUserExit = await UserModel.findOne({ username })
 
-        // 用户已经存在
         if (isUserExit) {
-            return ctx.body = {
+            return (ctx.body = {
                 code: 406,
                 message: '该用户已存在，请使用密码登录',
-            }
+            })
         }
 
-        // 创建新用户
-        const result = await UserModel.create({
+        enhancePassword = await bcrypt.hash(password, 5)
+        await UserModel.create({
             username,
             email,
-            password: md5(password),
+            password: enhancePassword,
         })
 
         ctx.body = {
@@ -31,28 +31,26 @@ class UserController {
         }
     }
 
-    // 用户登录
-    static async login(ctx) {
-        // await ……
+    static async login(ctx: Koa.Context) {
+        let isPasswordCorrect = false
         const { username, password } = ctx.request.body
-
-        // if (ctx.session.user) {
-        //     return (ctx.body = `${ctx.session.user} 已登录，请勿重复登录`)
-        // } else {
-        //     console.log(ctx.session.user)
-        //     return (ctx.body = ctx.session.user)
-        // }
-
         const user = await UserModel.findOne({
             username,
-            password: md5(password),
         })
 
         if (!user) {
-            return ctx.body = {
+            return (ctx.body = {
                 code: 403,
-                message: '请检查用户名和密码',
-            }
+                message: '请先注册',
+            })
+        }
+
+        isPasswordCorrect = await bcrypt.compare(password, user.password)
+        if (!isPasswordCorrect) {
+            return (ctx.body = {
+                code: 403,
+                message: '密码错误',
+            })
         }
 
         ctx.status = 200
@@ -70,11 +68,10 @@ class UserController {
     }
 
     // 用户退出
-    static async logout(ctx) {
-        // await ……
+    static async logout(ctx: Koa.Context) {
+        // just for test
         // const token = ctx.header.authorization
         const token = ctx.state.user
-        console.log(token)
         if (token) {
             ctx.body = '已经有token了'
         } else {
@@ -83,19 +80,19 @@ class UserController {
     }
 
     // 更新用户资料
-    static async put(ctx) {
+    static async put(ctx: Koa.Context) {
         // await ……
     }
 
     // 删除用户
-    static async deluser(ctx) {
+    static async deluser(ctx: Koa.Context) {
         // await ……
     }
 
     // 重置密码
-    static async resetpwd(ctx) {
+    static async resetpwd(ctx: Koa.Context) {
         // await ……
     }
 }
 
-module.exports = UserController
+export default UserController
