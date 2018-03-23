@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt'
 import * as jsonwebtoken from 'jsonwebtoken'
 import config from '../../config/dev';
 import UserModel from '../models/user'
+import { signToken } from '../middlewares/'
 
 class UserController {
     static async register(ctx: Koa.Context) {
@@ -57,13 +58,7 @@ class UserController {
         ctx.body = {
             message: '登录成功',
             user: username,
-            token: jsonwebtoken.sign(
-                {
-                    user,
-                    exp: config.token.exp,
-                },
-                config.token.secret
-            ),
+            token: signToken(username),
         }
     }
 
