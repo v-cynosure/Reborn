@@ -16,4 +16,4 @@ const authHandle = (ctx, next) => {
     });
 };
 exports.default = authHandle;
-//# sourceMappingURL=authhandle.js.map
+//# sourceMappingURL=authHandle.js.map
