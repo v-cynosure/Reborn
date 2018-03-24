@@ -4,7 +4,7 @@ import media from '../utils/mediaquery'
 
 export interface MenuProps {
     children?: React.ReactNode
-    style?: object
+    style?: React.CSSProperties
 }
 
 const MenuWrapper = styled.div`

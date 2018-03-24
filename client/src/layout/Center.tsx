@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import media from '../utils/mediaquery'
 
 export interface CenterProps {
-    style?: object
+    style?: React.CSSProperties
     children?: React.ReactNode
 }
 

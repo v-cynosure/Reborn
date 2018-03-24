@@ -20,8 +20,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import { Home, Login, Register } from './pages'
 
+import getRandomColor from './utils/getRandomColor'
+
 import { Center } from './layout'
-import { UploadImage } from './components'
+
+import { SelectAll } from './demos'
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -47,6 +50,9 @@ const muiTheme = getMuiTheme({
 
 const baseStyles = () => injectGlobal`
     ${reset}
+    margin: 0;
+    padding: 0;
+    font-family: Monospace Number,Chinese Quote,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif
     html, body, #root, .container {
         height: 100%;
     }
@@ -67,7 +73,15 @@ const App = () => {
             <div className="container">
                 <div>dispaly</div>
                 <Center>
-                    <UploadImage />
+                    {/* <Checkbox
+                        index={1}
+                        backgroundActiveColor={getRandomColor()}
+                        onCheck={(e, i, v, ac) => {
+                            console.log(e, i, v, ac)
+                        }}
+                    /> */}
+
+                    <SelectAll />
                 </Center>
             </div>
         </MuiThemeProvider>

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 
 import { Header, HeaderLeft, HeaderRight, Center } from '../layout'
 import { Menu, MenuItem, Logo, Entrance } from '../components'
@@ -22,6 +23,14 @@ class Login extends React.Component<LoginProps, {}> {
                 const username = target.username.value
                 const password = target.password.value
                 console.log('signin')
+                // var instance = axios.create({
+                //     baseURL: 'http://wsmis126:9000',
+                // })
+                // instance.defaults.headers.common['Authorization'] =
+                //     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imphc29uIiwiZXhwIjoyNTkMDAwMDAwLCJpYXQiOjE1MjE4NjEwMDZ9.faY1eFpjWJcWNI682chcnrcyUg82CEjIydpySwErq6c'
+                // instance.post('http://wsmis126:9000/api/logout').then(res => {
+                //     console.log(res)
+                // })
             },
         }
         return (

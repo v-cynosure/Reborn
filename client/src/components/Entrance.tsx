@@ -11,11 +11,10 @@ const EntranceWrapper = styled.div`
     height: 630px;
     padding: 77px 55px 33px 55px;
     overflow: hidden;
-    background: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
     ${media.tablet`
-        box-shadow: 0 0 0 0 #fff;
+        box-shadow: 0 0 0 0 transparent;
     `};
 `
 
@@ -117,7 +116,7 @@ const EntranceSign = styled.div`
 `
 
 export interface EntranceProps {
-    style?: object
+    style?: React.CSSProperties
     title?: string
     logo?: boolean
     logoLetter?: string

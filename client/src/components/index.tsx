@@ -5,3 +5,8 @@ export { default as Search } from './Search'
 export { default as Entrance } from './Entrance'
 export { default as Card } from './Card'
 export { default as UploadImage } from './UploadImage'
+export { default as Checkbox } from './Checkbox'
+
+import Checkbox from './Checkbox'
+import CheckboxGroup from './CheckboxGroup'
+Checkbox.Group = CheckboxGroup

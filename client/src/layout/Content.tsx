@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import media from '../utils/mediaquery'
 
 export interface ContentProps {
-    style?: object
+    style?: React.CSSProperties
     children?: React.ReactNode
 }
 
@@ -14,6 +14,9 @@ const ContentWrapper = styled.div`
     width: 80%;
     height: 100%;
     margin: 0 auto;
+    ${media.tablet`
+        width: 95%;
+    `};
 `
 
 const Content: React.StatelessComponent<ContentProps> = ({

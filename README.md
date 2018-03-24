@@ -114,3 +114,28 @@ const validities = {
 | btnBackground | 按钮背景色         | string  | linear-gradient(120deg, #a6c0fe 0%, #f68084 100%) |
 | updateURL     | 上传至服务器的 URL | string  |                                                   |
 | defaultImgURL | 默认占位图片       | string  |                                                   |
+
+### Checkbox
+
+复选框，该项目中用作技能选择
+| 参数 | 说明 | 类型 | 默认值 |
+| ----- | ---------- | ------ | ------ |
+| index | 元素下标，用于定位元素 | number | |
+| style | 根节点样式 | object | |
+| height | 单选框高度 | string | |
+| text | 单选框文本 | string | |
+| textColor | 文本颜色 | string | |
+| backgroundDefaultColor | 默认背景颜色 | string | |
+| backgroundActiveColor | 选中背景颜色 | string | |
+| onCheck | 点击事件处理函数 | function | |
+| checked | 是否选中 | boolean | |
+
+### CheckboxGroup
+
+| 参数         | 说明                 | 类型                   | 默认值 |
+| ------------ | -------------------- | ---------------------- | ------ |
+| style        | 根节点样式           | object                 |        |
+| options      | 所有选项             | array                  |        |
+| defaultValue | 默认选中选项         | array                  |        |
+| value        | 选中选项             | array                  |        |
+| onChange     | 选项改变时的处理函数 | function(checkedValue) |        |

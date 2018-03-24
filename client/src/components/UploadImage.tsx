@@ -5,7 +5,7 @@ import ReactCoreImageUpload from 'react-core-image-upload'
 import media from '../utils/mediaquery'
 
 export interface UploadImageProps {
-    style?: object
+    style?: React.CSSProperties
     circle?: boolean
     previewWidth?: string
     previewHeight?: string
@@ -82,10 +82,10 @@ class UploadImage extends React.Component<UploadImageProps, UploadImageState> {
         this.state = {
             imgURL: props.defaultImgURL,
         }
-        this.handleImageuploading = this.handleImageuploading.bind(this)
+        this.handleImageUploaded = this.handleImageUploaded.bind(this)
     }
 
-    handleImageuploading(res) {
+    handleImageUploaded(res) {
         this.setState({
             imgURL: res.imgeURL,
         })
@@ -118,8 +118,7 @@ class UploadImage extends React.Component<UploadImageProps, UploadImageState> {
                     }}
                     text="上传图片"
                     url={updateURL} // 服务器上传位置
-                    // imageUploaded={this.imageuploaded}
-                    imageuploading={this.handleImageuploading}
+                    imageUploaded={this.handleImageUploaded}
                     cropBtn={{ ok: '确认', cancel: '取消' }}
                 />
             </UploadImageWrapper>

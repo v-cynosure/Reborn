@@ -6,7 +6,7 @@ import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border'
 import media from '../utils/mediaquery'
 
 export interface CardProps {
-    style?: object
+    style?: React.CSSProperties
     cover?: string
     title?: string
     subtitle?: string
@@ -41,6 +41,7 @@ const CardWrapper = styled.div`
     `};
     ${media.phone`
         width: 100%;
+        margin: 10px 0;
     `};
 `
 
