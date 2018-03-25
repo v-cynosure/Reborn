@@ -5,15 +5,13 @@ import * as cors from 'kcors'
 import * as koaLogger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
 import config from './config/dev'
-import {
-    initMongodb,
-    verifyToken,
-    authHandle
-} from './rest/middlewares'
-
-import api from './rest/api/'
+import { initMongodb, Auth } from './rest/middlewares'
+import Loader from './rest/loader'
 
 const app = new Koa()
+
+// include router loader and controller loader
+const loader = new Loader()
 
 // mongoose
 initMongodb(config.mongodb)
@@ -27,7 +25,7 @@ app.use(
 )
 
 // check token
-verifyToken(app, authHandle)
+app.use(Auth.errorHandle).use(Auth.verifyToken())
 
 // log
 app.use(koaLogger())
@@ -36,9 +34,7 @@ app.use(koaLogger())
 app.use(bodyParser())
 
 // implement all api
-api(app)
-
-app.listen(3333)
+app.use(loader.loadRouter())
 
 app.listen(config.port, () => {
     console.log(`✅ The server is running at http://localhost:${config.port}/`)

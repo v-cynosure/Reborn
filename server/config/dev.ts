@@ -1,6 +1,9 @@
 interface DevConfig {
     port: number
     baseApi: string
+    auth: {
+        excludes: Array<RegExp>
+    }
     cors: {
         origin: string
         credentials: boolean
@@ -15,6 +18,9 @@ interface DevConfig {
 const config: DevConfig = {
     port: 9000,
     baseApi: 'api',
+    auth: {
+        excludes: [/\/api\/register/, /\/api\/login/],
+    },
     cors: {
         origin: '*',
         credentials: true,

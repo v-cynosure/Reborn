@@ -3,22 +3,34 @@ import * as jwt from 'koa-jwt'
 import * as jsonwebtoken from 'jsonwebtoken'
 import config from '../../config/dev'
 
-export const signToken = (username: string) => {
-    return jsonwebtoken.sign(
-        {
-            username,
-            exp: config.token.exp,
-        },
-        config.token.secret
-    )
+class Auth {
+    static signToken(username: string) {
+        return jsonwebtoken.sign(
+            { username, exp: config.token.exp },
+            config.token.secret
+        )
+    }
+
+    static verifyToken() {
+        return jwt({
+            secret: config.token.secret,
+        }).unless({ path: config.auth.excludes })
+    }
+
+    static errorHandle(ctx: Koa.Context, next: any) {
+        return next().catch((err: any) => {
+            if (err.status === 401) {
+                ctx.status = 401
+                ctx.body = {
+                    error: err.originalError
+                        ? err.originalError.message
+                        : err.message,
+                }
+            } else {
+                throw err
+            }
+        })
+    }
 }
 
-export const verifyToken = (app: Koa, handle: any) => {
-    app.use(handle).use(
-        jwt({
-            secret: config.token.secret,
-        }).unless({
-            path: [/\/api\/register/, /\/api\/login/],
-        })
-    )
-}
+export default Auth

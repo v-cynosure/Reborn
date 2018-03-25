@@ -1,5 +1,5 @@
 import * as Router from 'koa-router'
-import config from '../../config/dev';
+import config from '../../config/dev'
 import userctrl from '../controllers/user'
 
 const router = new Router()

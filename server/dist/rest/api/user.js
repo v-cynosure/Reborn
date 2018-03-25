@@ -9,4 +9,3 @@ router.post('/register', user_1.default.register);
 router.post('/login', user_1.default.login);
 router.post('/logout', user_1.default.logout);
 exports.default = router;
-//# sourceMappingURL=user.js.map

@@ -6,8 +6,10 @@ const koaLogger = require("koa-logger");
 const bodyParser = require("koa-bodyparser");
 const dev_1 = require("./config/dev");
 const middlewares_1 = require("./rest/middlewares");
-const _1 = require("./rest/api/");
+const loader_1 = require("./rest/loader");
 const app = new Koa();
+// include router loader and controller loader
+const loader = new loader_1.default();
 // mongoose
 middlewares_1.initMongodb(dev_1.default.mongodb);
 // cors
@@ -16,15 +18,13 @@ app.use(cors({
     credentials: dev_1.default.cors.credentials,
 }));
 // check token
-middlewares_1.verifyToken(app, middlewares_1.authHandle);
+app.use(middlewares_1.Auth.errorHandle).use(middlewares_1.Auth.verifyToken());
 // log
 app.use(koaLogger());
 // body parse
 app.use(bodyParser());
 // implement all api
-_1.default(app);
-app.listen(3333);
+app.use(loader.loadRouter());
 app.listen(dev_1.default.port, () => {
     console.log(`✅ The server is running at http://localhost:${dev_1.default.port}/`);
 });
-//# sourceMappingURL=index.js.map
