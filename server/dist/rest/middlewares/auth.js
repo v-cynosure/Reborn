@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("koa-jwt");
 const jsonwebtoken = require("jsonwebtoken");
 const dev_1 = require("../../config/dev");
-exports.signToken = (user) => {
+exports.signToken = (username) => {
     return jsonwebtoken.sign({
-        user,
+        username,
         exp: dev_1.default.token.exp,
     }, dev_1.default.token.secret);
 };
