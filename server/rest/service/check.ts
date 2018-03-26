@@ -1,13 +1,5 @@
 import * as Koa from 'koa'
-
-class Service {
-    ctx: Koa.Context
-    app: Koa
-    constructor(ctx: Koa.Context, app: Koa) {
-        this.ctx = ctx
-        this.app = app
-    }
-}
+import Service from './base'
 
 class check extends Service {
     index() {
@@ -15,4 +7,5 @@ class check extends Service {
     }
 }
 
+// notice that you should use medule.esports instead of export default
 module.exports = check

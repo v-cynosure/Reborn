@@ -59,10 +59,11 @@ class Loader {
                     loaded['service'] = {}
                     service.forEach(dir => {
                         const splits = dir.split('.')
-
+                        console.log(splits)
                         if (
                             !splits.includes('map') &&
-                            !splits.includes('DS_Store')
+                            !splits.includes('DS_Store') &&
+                            !splits.includes('base')
                         ) {
                             const name = splits[0]
                             const mod = require(__dirname + '/service/' + dir)

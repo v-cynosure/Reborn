@@ -11,7 +11,7 @@ class User extends Controller {
         return (<any>this.app)['config']
     }
 
-    @bp.get('/api/register')
+    @bp.post('/api/register')
     async register() {
         try {
             let enhancePassword = null
@@ -82,7 +82,7 @@ class User extends Controller {
     // 用户退出
     @bp.post('/api/logout')
     async logout() {
-    //     // await ……
+        //     // await ……
     }
 
     // 更新用户资料

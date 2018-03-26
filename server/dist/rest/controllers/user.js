@@ -83,7 +83,7 @@ class User extends base_1.default {
     }
 }
 __decorate([
-    blueprint_1.default.get('/api/register'),
+    blueprint_1.default.post('/api/register'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
