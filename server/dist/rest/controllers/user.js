@@ -12,25 +12,25 @@ class User extends base_1.default {
             this.ctx.body = {
                 message: 'success'
             };
-            const isUserExit = await user_1.default.findOne({ username });
-            if (isUserExit) {
-                return (this.ctx.body = {
-                    code: 406,
-                    message: '该用户已存在，请使用密码登录',
-                });
-            }
-            enhancePassword = await bcrypt.hash(password, 5);
-            await user_1.default.create({
-                username,
-                email,
-                password: enhancePassword,
-            });
-            this.ctx.body = {
-                code: 200,
-                message: '注册成功',
-                user: username,
-                token: _1.Auth.signToken(username),
-            };
+            // const isUserExit = await UserModel.findOne({ username })
+            // if (isUserExit) {
+            //     return (this.ctx.body = {
+            //         code: 406,
+            //         message: '该用户已存在，请使用密码登录',
+            //     })
+            // }
+            // enhancePassword = await bcrypt.hash(password, 5)
+            // await UserModel.create({
+            //     username,
+            //     email,
+            //     password: enhancePassword,
+            // })
+            // this.ctx.body = {
+            //     code: 200,
+            //     message: '注册成功',
+            //     user: username,
+            //     token: Auth.signToken(username),
+            // }
         }
         catch (error) {
             this.ctx.throw(500);

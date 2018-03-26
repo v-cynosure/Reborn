@@ -5,4 +5,3 @@ const api = (app) => {
     app.use(user_1.default.routes()).use(user_1.default.allowedMethods());
 };
 exports.default = api;
-//# sourceMappingURL=index.js.map

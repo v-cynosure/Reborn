@@ -3,17 +3,58 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const Router = require("koa-router");
 class Loader {
-    constructor() {
+    constructor(app) {
         this.router = new Router();
         this.controller = {};
+        this.app = app;
     }
+    /**
+     * set Koa.ctx a global property service
+     * you can directly use this.ctx.service.filename.method() in controller
+     * scan service dir, bind files' methods to service property
+     * use cache to optimize
+     * @returns void
+     * @memberof Loader
+     */
+    loadService() {
+        const service = fs.readdirSync(__dirname + '/service');
+        Object.defineProperty(this.app.context, 'service', {
+            get() {
+                // set cache
+                if (!this['cache']) {
+                    ;
+                    this['cache'] = {};
+                }
+                const loaded = this['cache'];
+                if (!loaded['service']) {
+                    loaded['service'] = {};
+                    service.forEach(dir => {
+                        const splits = dir.split('.');
+                        if (!splits.includes('map') &&
+                            !splits.includes('DS_Store')) {
+                            const name = splits[0];
+                            const mod = require(__dirname + '/service/' + dir);
+                            loaded['service'][name] = new mod(this);
+                        }
+                    });
+                    return loaded.service;
+                }
+                return loaded.service;
+            },
+        });
+    }
+    /**
+     * set this.controller.filename.method
+     * scan controllers dir and set property
+     * @memberof Loader
+     */
     loadController() {
         // read all dirs
         const dirs = fs.readdirSync(__dirname + '/controllers');
         dirs.forEach(filename => {
             // filename as controller's property
             const splits = filename.split('.');
-            if (!splits.includes('map')) {
+            if (!splits.includes('map') && !splits.includes('DS_Store')) {
                 const property = splits[0];
                 // mod: [Function: Controller] [Function: User]
                 const mod = require(__dirname + '/controllers/' + filename)
@@ -41,11 +82,19 @@ class Loader {
             }
         });
     }
+    /**
+     * Template [method /api/]: controller[filename][method]
+     * this.controller has been create by loadController
+     * Resolve template auto
+     * note that set new ctx in class everytime
+     * @returns router.routes()
+     * @memberof Loader
+     */
     loadRouter() {
         this.loadController();
+        this.loadService();
         const mod = require(__dirname + '/router.js');
         const routers = mod(this.controller);
-        console.log(routers);
         Object.keys(routers).forEach(key => {
             const [method, path] = key.split(' ');
             this.router[method](path, async (ctx) => {

@@ -9,7 +9,7 @@ const middlewares_1 = require("./rest/middlewares");
 const loader_1 = require("./rest/loader");
 const app = new Koa();
 // include router loader and controller loader
-const loader = new loader_1.default();
+const loader = new loader_1.default(app);
 // mongoose
 middlewares_1.initMongodb(dev_1.default.mongodb);
 // cors

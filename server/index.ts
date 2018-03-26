@@ -11,7 +11,7 @@ import Loader from './rest/loader'
 const app = new Koa()
 
 // include router loader and controller loader
-const loader = new Loader()
+const loader = new Loader(app)
 
 // mongoose
 initMongodb(config.mongodb)

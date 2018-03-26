@@ -9,4 +9,3 @@ const init = (path) => {
     });
 };
 exports.default = init;
-//# sourceMappingURL=db.js.map

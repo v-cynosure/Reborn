@@ -22,4 +22,3 @@ const UserSchema = new Mongoose.Schema({
 });
 const UserModel = Mongoose.model('User', UserSchema);
 exports.default = UserModel;
-//# sourceMappingURL=user.js.map
