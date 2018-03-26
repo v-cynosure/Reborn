@@ -5,10 +5,14 @@ const base_1 = require("./base");
 const user_1 = require("../models/user");
 const _1 = require("../middlewares/");
 class User extends base_1.default {
+    getConfig() {
+        return this.app['config'];
+    }
     async register() {
         try {
             let enhancePassword = null;
             const { username, email, password } = this.ctx.request.body;
+            console.log(this.getConfig());
             this.ctx.body = {
                 message: 'success'
             };

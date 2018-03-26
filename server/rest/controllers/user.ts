@@ -2,16 +2,19 @@ import * as Koa from 'koa'
 import * as bcrypt from 'bcrypt'
 import * as jsonwebtoken from 'jsonwebtoken'
 import Controller from './base'
-import config from '../../config/dev'
 import UserModel from '../models/user'
 import { Auth } from '../middlewares/'
 
 class User extends Controller {
+    getConfig() {
+        return (<any>this.app)['config']
+    }
+
     async register() {
         try {
             let enhancePassword = null
             const { username, email, password } = this.ctx.request.body
-
+            console.log(this.getConfig())
             this.ctx.body = {
                 message: 'success'
             }

@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
 
@@ -12,6 +13,28 @@ class Loader {
     }
 
     /**
+     * read all config in config dir and concat
+     * append to Koa instance(app)
+     * @memberof Loader
+     */
+    loadConfig() {
+        const isProEnv = process.env.NODE_ENV === 'production'
+        const configDef = path.join(__dirname, '../config/config.default.js')
+        const configEnv = path.join(
+            __dirname,
+            isProEnv ? '../config/config.pro.js' : '../config/config.dev.js'
+        )
+        const conf = require(configEnv)
+        const confDef = require(configDef)
+        const merge = Object.assign({}, conf, confDef)
+        Object.defineProperty(this.app, 'config', {
+            get: () => {
+                return merge
+            },
+        })
+    }
+
+    /**
      * set Koa.ctx a global property service
      * you can directly use this.ctx.service.filename.method() in controller
      * scan service dir, bind files' methods to service property
@@ -20,6 +43,7 @@ class Loader {
      * @memberof Loader
      */
     loadService() {
+        const self = this
         const service = fs.readdirSync(__dirname + '/service')
 
         Object.defineProperty(this.app.context, 'service', {
@@ -42,7 +66,7 @@ class Loader {
                             const name = splits[0]
                             const mod = require(__dirname + '/service/' + dir)
 
-                            loaded['service'][name] = new mod(this)
+                            loaded['service'][name] = new mod(this, self.app)
                         }
                     })
                     return loaded.service
@@ -99,6 +123,7 @@ class Loader {
             }
         })
     }
+
     /**
      * Template [method /api/]: controller[filename][method]
      * this.controller has been create by loadController
@@ -110,6 +135,7 @@ class Loader {
     loadRouter() {
         this.loadController()
         this.loadService()
+        this.loadConfig()
 
         const mod = require(__dirname + '/router.js')
         const routers = mod(this.controller)
@@ -121,7 +147,7 @@ class Loader {
             ;(<any>this.router)[method](path, async (ctx: Koa.Context) => {
                 const _class = routers[key].type
                 const handle = routers[key].methodName
-                const instance = new _class(ctx)
+                const instance = new _class(ctx, this.app)
                 instance[handle]()
             })
         })

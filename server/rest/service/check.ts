@@ -1,9 +1,11 @@
-import { Context } from 'koa'
+import * as Koa from 'koa'
 
 class Service {
-    ctx: Context
-    constructor(ctx: Context) {
+    ctx: Koa.Context
+    app: Koa
+    constructor(ctx: Koa.Context, app: Koa) {
         this.ctx = ctx
+        this.app = app
     }
 }
 

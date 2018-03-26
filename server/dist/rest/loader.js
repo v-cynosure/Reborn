@@ -1,12 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const path = require("path");
 const Router = require("koa-router");
 class Loader {
     constructor(app) {
         this.router = new Router();
         this.controller = {};
         this.app = app;
+    }
+    /**
+     * read all config in config dir and concat
+     * append to Koa instance(app)
+     * @memberof Loader
+     */
+    loadConfig() {
+        const isProEnv = process.env.NODE_ENV === 'production';
+        const configDef = path.join(__dirname, '../config/config.default.js');
+        const configEnv = path.join(__dirname, isProEnv ? '../config/config.pro.js' : '../config/config.dev.js');
+        const conf = require(configEnv);
+        const confDef = require(configDef);
+        const merge = Object.assign({}, conf, confDef);
+        Object.defineProperty(this.app, 'config', {
+            get: () => {
+                return merge;
+            },
+        });
     }
     /**
      * set Koa.ctx a global property service
@@ -17,6 +36,7 @@ class Loader {
      * @memberof Loader
      */
     loadService() {
+        const self = this;
         const service = fs.readdirSync(__dirname + '/service');
         Object.defineProperty(this.app.context, 'service', {
             get() {
@@ -34,7 +54,7 @@ class Loader {
                             !splits.includes('DS_Store')) {
                             const name = splits[0];
                             const mod = require(__dirname + '/service/' + dir);
-                            loaded['service'][name] = new mod(this);
+                            loaded['service'][name] = new mod(this, self.app);
                         }
                     });
                     return loaded.service;
@@ -93,6 +113,7 @@ class Loader {
     loadRouter() {
         this.loadController();
         this.loadService();
+        this.loadConfig();
         const mod = require(__dirname + '/router.js');
         const routers = mod(this.controller);
         Object.keys(routers).forEach(key => {
@@ -100,7 +121,7 @@ class Loader {
             this.router[method](path, async (ctx) => {
                 const _class = routers[key].type;
                 const handle = routers[key].methodName;
-                const instance = new _class(ctx);
+                const instance = new _class(ctx, this.app);
                 instance[handle]();
             });
         });
