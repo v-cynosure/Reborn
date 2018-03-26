@@ -4,47 +4,47 @@ import * as jsonwebtoken from 'jsonwebtoken'
 import Controller from './base'
 import UserModel from '../models/user'
 import { Auth } from '../middlewares/'
+import bp from '../blueprint'
 
 class User extends Controller {
     getConfig() {
         return (<any>this.app)['config']
     }
 
+    @bp.get('/api/register')
     async register() {
         try {
             let enhancePassword = null
             const { username, email, password } = this.ctx.request.body
-            console.log(this.getConfig())
-            this.ctx.body = {
-                message: 'success'
+
+            const isUserExit = await UserModel.findOne({ username })
+
+            if (isUserExit) {
+                return (this.ctx.body = {
+                    code: 406,
+                    message: '该用户已存在，请使用密码登录',
+                })
             }
-            // const isUserExit = await UserModel.findOne({ username })
 
-            // if (isUserExit) {
-            //     return (this.ctx.body = {
-            //         code: 406,
-            //         message: '该用户已存在，请使用密码登录',
-            //     })
-            // }
+            enhancePassword = await bcrypt.hash(password, 5)
+            await UserModel.create({
+                username,
+                email,
+                password: enhancePassword,
+            })
 
-            // enhancePassword = await bcrypt.hash(password, 5)
-            // await UserModel.create({
-            //     username,
-            //     email,
-            //     password: enhancePassword,
-            // })
-
-            // this.ctx.body = {
-            //     code: 200,
-            //     message: '注册成功',
-            //     user: username,
-            //     token: Auth.signToken(username),
-            // }
+            this.ctx.body = {
+                code: 200,
+                message: '注册成功',
+                user: username,
+                token: Auth.signToken(username),
+            }
         } catch (error) {
             this.ctx.throw(500)
         }
     }
 
+    @bp.post('/api/login')
     async login() {
         try {
             let isPasswordCorrect = false
@@ -68,25 +68,22 @@ class User extends Controller {
                 })
             }
 
-        this.ctx.status = 200
-        this.ctx.body = {
-            message: '登录成功',
-            user: username,
-            token: Auth.signToken(username),
+            this.ctx.status = 200
+            this.ctx.body = {
+                message: '登录成功',
+                user: username,
+                token: Auth.signToken(username),
+            }
+        } catch (error) {
+            this.ctx.throw(500)
         }
     }
 
     // 用户退出
-    // static async logout(ctx: Koa.Context) {
-    //     // just for test
-    //     // const token = ctx.header.authorization
-    //     const token = ctx.state.user
-    //     if (token) {
-    //         ctx.body = '已经有token了'
-    //     } else {
-    //         ctx.body = '没有找到token'
-    //     }
-    // }
+    @bp.post('/api/logout')
+    async logout() {
+    //     // await ……
+    }
 
     // 更新用户资料
     // static async put(ctx: Koa.Context) {
@@ -99,9 +96,9 @@ class User extends Controller {
     // }
 
     // 重置密码
-    static async resetpwd(ctx: Koa.Context) {
-        // await ……
-    }
+    // static async resetpwd(ctx: Koa.Context) {
+    //     // await ……
+    // }
 }
 
 export default User

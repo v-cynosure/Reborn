@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 const Router = require("koa-router");
+const blueprint_1 = require("./blueprint");
 class Loader {
     constructor(app) {
         this.router = new Router();
@@ -69,37 +70,9 @@ class Loader {
      * @memberof Loader
      */
     loadController() {
-        // read all dirs
         const dirs = fs.readdirSync(__dirname + '/controllers');
         dirs.forEach(filename => {
-            // filename as controller's property
-            const splits = filename.split('.');
-            if (!splits.includes('map') && !splits.includes('DS_Store')) {
-                const property = splits[0];
-                // mod: [Function: Controller] [Function: User]
-                const mod = require(__dirname + '/controllers/' + filename)
-                    .default;
-                if (mod) {
-                    // find all property
-                    const methodNames = Object.getOwnPropertyNames(mod.prototype).filter(names => {
-                        if (names !== 'constructor') {
-                            return names;
-                        }
-                    });
-                    Object.defineProperty(this.controller, property, {
-                        get() {
-                            const merge = {};
-                            methodNames.forEach(name => {
-                                merge[name] = {
-                                    type: mod,
-                                    methodName: name,
-                                };
-                            });
-                            return merge;
-                        },
-                    });
-                }
-            }
+            require(__dirname + '/controllers/' + filename).default;
         });
     }
     /**
@@ -114,15 +87,14 @@ class Loader {
         this.loadController();
         this.loadService();
         this.loadConfig();
-        const mod = require(__dirname + '/router.js');
-        const routers = mod(this.controller);
-        Object.keys(routers).forEach(key => {
-            const [method, path] = key.split(' ');
-            this.router[method](path, async (ctx) => {
-                const _class = routers[key].type;
-                const handle = routers[key].methodName;
-                const instance = new _class(ctx, this.app);
-                instance[handle]();
+        const r = blueprint_1.default.getRoute();
+        Object.keys(r).forEach(url => {
+            r[url].forEach(object => {
+                ;
+                this.router[object.httpMethod](url, async (ctx) => {
+                    const instance = new object.constructor(ctx, this.app);
+                    await instance[object.handler]();
+                });
             });
         });
         return this.router.routes();
