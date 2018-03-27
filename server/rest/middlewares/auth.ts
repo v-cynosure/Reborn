@@ -6,7 +6,7 @@ import config from '../../config/dev'
 class Auth {
     static signToken(username: string) {
         return jsonwebtoken.sign(
-            { username, exp: config.token.exp },
+            username,
             config.token.secret
         )
     }

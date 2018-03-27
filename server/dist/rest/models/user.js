@@ -2,11 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // sign up and login user
 const Mongoose = require("mongoose");
+// interface IUser extends Mongoose.Document {
+//     username: string
+//     email: string
+//     password: string
+// }
 const UserSchema = new Mongoose.Schema({
     username: {
         type: String,
         unique: true,
         required: true,
+    },
+    cName: {
+        type: String,
+    },
+    eName: {
+        type: String,
     },
     password: {
         type: String,
@@ -14,6 +25,10 @@ const UserSchema = new Mongoose.Schema({
     },
     email: {
         type: String,
+    },
+    isUpdated: {
+        type: Boolean,
+        default: false,
     },
     createdAt: {
         type: Date,

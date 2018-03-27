@@ -65,6 +65,22 @@ class Blueprint {
     }
 
     /**
+     * 用法@instance.put('/')
+     * @param url
+     * @param target class.prototype
+     * @param propertyKey class.method
+     */
+    put(url: string) {
+        return (target: any, propertyKey: string) => {
+            ;(<any>this).setRouter(url, {
+                httpMethod: 'put',
+                constructor: target.constructor,
+                handler: propertyKey,
+            })
+        }
+    }
+
+    /**
      * 返回路由
      */
     getRoute() {

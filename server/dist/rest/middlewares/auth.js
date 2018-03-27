@@ -5,7 +5,7 @@ const jsonwebtoken = require("jsonwebtoken");
 const dev_1 = require("../../config/dev");
 class Auth {
     static signToken(username) {
-        return jsonwebtoken.sign({ username, exp: dev_1.default.token.exp }, dev_1.default.token.secret);
+        return jsonwebtoken.sign(username, dev_1.default.token.secret);
     }
     static verifyToken() {
         return jwt({

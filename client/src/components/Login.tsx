@@ -15,9 +15,11 @@ class Login extends React.Component {
                 const { target } = e
                 const username = target.username.value
                 const password = target.password.value
-                axios.post('http://wsmis126:9000/api/logout', {
+                axios.post('http://wsmis126:9000/api/login', {
                     username,
                     password,
+                }).then(res => {
+                    console.log(res)
                 })
             },
         }

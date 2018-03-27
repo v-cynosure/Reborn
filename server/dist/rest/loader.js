@@ -49,9 +49,9 @@ class Loader {
                 const loaded = this['cache'];
                 if (!loaded['service']) {
                     loaded['service'] = {};
+                    console.log(service);
                     service.forEach(dir => {
                         const splits = dir.split('.');
-                        console.log(splits);
                         if (!splits.includes('map') &&
                             !splits.includes('DS_Store') &&
                             !splits.includes('base')) {
