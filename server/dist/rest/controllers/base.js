@@ -5,5 +5,12 @@ class Controller {
         this.ctx = ctx;
         this.app = app;
     }
+    emit(code, message, payload) {
+        this.ctx.body = {
+            code,
+            message,
+            payload,
+        };
+    }
 }
 exports.default = Controller;

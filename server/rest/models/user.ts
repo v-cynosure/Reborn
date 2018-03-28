@@ -38,4 +38,4 @@ const UserSchema = new Mongoose.Schema({
 
 const UserModel = Mongoose.model('User', UserSchema)
 
-export default UserModel
+module.exports = UserModel
