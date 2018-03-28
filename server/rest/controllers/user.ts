@@ -17,21 +17,21 @@ class User extends Controller {
             let enhancePassword = null
             const { username, email, password } = this.ctx.request.body
 
-            // const isUserExit = await UserModel.findOne({ username })
+            const isUserExit = await UserModel.findOne({ username })
 
-            // if (isUserExit) {
-            //     return (this.ctx.body = {
-            //         code: 406,
-            //         message: '该用户已存在，请使用密码登录',
-            //     })
-            // }
+            if (isUserExit) {
+                return (this.ctx.body = {
+                    code: 406,
+                    message: '该用户已存在，请使用密码登录',
+                })
+            }
 
-            // enhancePassword = await bcrypt.hash(password, 5)
-            // await UserModel.create({
-            //     username,
-            //     email,
-            //     password: enhancePassword,
-            // })
+            enhancePassword = await bcrypt.hash(password, 5)
+            await UserModel.create({
+                username,
+                email,
+                password: enhancePassword,
+            })
 
             this.ctx.body = {
                 code: 200,
