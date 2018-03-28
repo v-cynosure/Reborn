@@ -105,8 +105,8 @@ class Loader {
      * @memberof Loader
      */
     loadRouter() {
-        this.loadModel();
         this.loadConfig();
+        this.loadModel();
         this.loadService();
         this.loadController();
         const r = blueprint_1.default.getRoute();

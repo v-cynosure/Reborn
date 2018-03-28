@@ -19,35 +19,21 @@ class Group extends base_1.default {
         try {
             const user = await this.ctx.service.group.get();
             if (!user) {
-                return (this.ctx.body = {
-                    code: 404,
-                    message: '找不到该用户的信息',
-                });
+                return this.emit(404, '找不到该用户的信息');
             }
-            this.ctx.body = {
-                code: 200,
-                message: '成功返回',
-                payload: user,
-            };
+            this.emit(200, '成功返回', user);
         }
         catch (error) {
             this.ctx.throw(500);
         }
     }
-    async getUserList() {
+    async getUserList(conditions = {}) {
         try {
-            const users = await this.ctx.service.group.list({});
+            const users = await this.ctx.service.group.list(conditions);
             if (!users) {
-                return (this.ctx.body = {
-                    code: 404,
-                    message: '竟然一个用户都没有，忧桑',
-                });
+                return this.emit(404, '竟然一个用户都没有');
             }
-            this.ctx.body = {
-                code: 200,
-                message: '成功返回所有用户',
-                payload: users,
-            };
+            this.emit(200, '成功返回用户', users);
         }
         catch (error) {
             this.ctx.throw(500);
@@ -55,23 +41,7 @@ class Group extends base_1.default {
     }
     async getUsersByDepartment() {
         const { department } = this.ctx.params;
-        try {
-            const users = await this.ctx.service.group.list({ department });
-            if (!users) {
-                return (this.ctx.body = {
-                    code: 404,
-                    message: '竟然一个用户都没有，忧桑',
-                });
-            }
-            this.ctx.body = {
-                code: 200,
-                message: '成功返部门所有用户',
-                payload: users,
-            };
-        }
-        catch (error) {
-            this.ctx.throw(500);
-        }
+        this.getUserList({ department });
     }
 }
 __decorate([
@@ -83,7 +53,7 @@ __decorate([
 __decorate([
     blueprint_1.default.get('/api/users'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], Group.prototype, "getUserList", null);
 __decorate([

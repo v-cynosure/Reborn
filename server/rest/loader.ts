@@ -122,8 +122,8 @@ class Loader {
      * @memberof Loader
      */
     loadRouter() {
-        this.loadModel()
         this.loadConfig()
+        this.loadModel()
         this.loadService()
         this.loadController()
 

@@ -1,12 +1,11 @@
 import * as Koa from 'koa'
 import * as bcrypt from 'bcrypt'
 import Service from './base'
-import UserModel from '../models/user'
 
 class User extends Service {
     async get() {
         const { username } = this.ctx.request.body
-        const user = await UserModel.findOne({ username })
+        const user = await this.ctx.model.user.findOne({ username })
 
         if (user) return user
         return null
@@ -21,19 +20,19 @@ class User extends Service {
         const { username, email, password } = this.ctx.request.body
         const enhancePassword = await bcrypt.hash(password, 5)
 
-        UserModel.create({
+        this.ctx.model.user.create({
             username,
             email,
             password: enhancePassword,
         })
     }
 
-    async update(username: string, info: Object) {
+    async update(username: string, info: object) {
         // const obj = Object.assign({}, info, { isUpdated: true })
-        return await UserModel.update(
+        return await this.ctx.model.user.update(
             { username },
             { ...info, isUpdated: true },
-            (error, docs) => {
+            (error: any, docs: object) => {
                 return error ? false : true
             }
         )
