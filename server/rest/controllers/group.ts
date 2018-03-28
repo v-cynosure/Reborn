@@ -31,17 +31,44 @@ class Group extends Controller {
 
     @bp.get('/api/users')
     async getUserList() {
-        const users = await this.ctx.service.group.list()
-        if (!users) {
-            return (this.ctx.body = {
-                code: 404,
-                message: '竟然一个用户都没有，忧桑',
-            })
+        try {
+            const users = await this.ctx.service.group.list({})
+
+            if (!users) {
+                return (this.ctx.body = {
+                    code: 404,
+                    message: '竟然一个用户都没有，忧桑',
+                })
+            }
+            this.ctx.body = {
+                code: 200,
+                message: '成功返回所有用户',
+                payload: users,
+            }
+        } catch (error) {
+            this.ctx.throw(500)
         }
-        this.ctx.body = {
-            code: 200,
-            message: '成功返回所有用户',
-            payload: users,
+    }
+
+    @bp.get('/api/users/:department')
+    async getUsersByDepartment() {
+        const { department } = this.ctx.params
+        try {
+            const users = await this.ctx.service.group.list({department})
+
+            if (!users) {
+                return (this.ctx.body = {
+                    code: 404,
+                    message: '竟然一个用户都没有，忧桑',
+                })
+            }
+            this.ctx.body = {
+                code: 200,
+                message: '成功返部门所有用户',
+                payload: users,
+            }
+        } catch (error) {
+            this.ctx.throw(500)
         }
     }
 }

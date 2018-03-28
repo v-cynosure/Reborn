@@ -33,7 +33,6 @@ class User extends Service {
         return await UserModel.update(
             { username },
             { ...info, isUpdated: true },
-            // { multi: true },
             (error, docs) => {
                 return error ? false : true
             }

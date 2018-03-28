@@ -26,9 +26,7 @@ class User extends base_1.default {
     }
     async update(username, info) {
         // const obj = Object.assign({}, info, { isUpdated: true })
-        return await user_1.default.update({ username }, Object.assign({}, info, { isUpdated: true }), 
-        // { multi: true },
-        (error, docs) => {
+        return await user_1.default.update({ username }, Object.assign({}, info, { isUpdated: true }), (error, docs) => {
             return error ? false : true;
         });
     }

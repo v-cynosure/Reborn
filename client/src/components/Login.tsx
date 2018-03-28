@@ -15,12 +15,23 @@ class Login extends React.Component {
                 const { target } = e
                 const username = target.username.value
                 const password = target.password.value
-                axios.post('http://wsmis126:9000/api/login', {
-                    username,
-                    password,
-                }).then(res => {
-                    console.log(res)
+                var instance = axios.create({
+                    baseURL: 'http://wsmis126:9000/',
+                    headers: {
+                        Authorization:
+                            'bearer eyJhbGciOiJIUzI1NiJ9.enp6.QS7AJNszjHl79f8Yrmq-mXwkMjWcJtbeNiASl-4PX4g',
+                    },
                 })
+                instance
+                    .get('http://wsmis126:9000/api/users', {
+                        params: {
+                            pageSize: 8,
+                            page: 0
+                        }
+                    })
+                    .then(res => {
+                        console.log(res)
+                    })
             },
         }
         return <Entrance {...props} />

@@ -35,18 +35,43 @@ class Group extends base_1.default {
         }
     }
     async getUserList() {
-        const users = await this.ctx.service.group.list();
-        if (!users) {
-            return (this.ctx.body = {
-                code: 404,
-                message: '竟然一个用户都没有，忧桑',
-            });
+        try {
+            const users = await this.ctx.service.group.list({});
+            if (!users) {
+                return (this.ctx.body = {
+                    code: 404,
+                    message: '竟然一个用户都没有，忧桑',
+                });
+            }
+            this.ctx.body = {
+                code: 200,
+                message: '成功返回所有用户',
+                payload: users,
+            };
         }
-        this.ctx.body = {
-            code: 200,
-            message: '成功返回所有用户',
-            payload: users,
-        };
+        catch (error) {
+            this.ctx.throw(500);
+        }
+    }
+    async getUsersByDepartment() {
+        const { department } = this.ctx.params;
+        try {
+            const users = await this.ctx.service.group.list({ department });
+            if (!users) {
+                return (this.ctx.body = {
+                    code: 404,
+                    message: '竟然一个用户都没有，忧桑',
+                });
+            }
+            this.ctx.body = {
+                code: 200,
+                message: '成功返部门所有用户',
+                payload: users,
+            };
+        }
+        catch (error) {
+            this.ctx.throw(500);
+        }
     }
 }
 __decorate([
@@ -61,4 +86,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Group.prototype, "getUserList", null);
+__decorate([
+    blueprint_1.default.get('/api/users/:department'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Group.prototype, "getUsersByDepartment", null);
 exports.default = Group;

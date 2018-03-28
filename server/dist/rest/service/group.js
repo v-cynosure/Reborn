@@ -10,8 +10,16 @@ class Group extends base_1.default {
             return user;
         return null;
     }
-    async list() {
-        const users = await user_1.default.find({});
+    async list(conditions) {
+        const { query } = this.ctx.request;
+        const pageSize = parseInt(query.pageSize);
+        const page = parseInt(query.page);
+        const users = await user_1.default.find(conditions)
+            .limit(pageSize)
+            .skip(page * pageSize)
+            .sort({
+            createdAt: 1,
+        });
         if (users)
             return users;
         return null;

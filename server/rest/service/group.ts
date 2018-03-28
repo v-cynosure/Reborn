@@ -11,8 +11,18 @@ class Group extends Service {
         return null
     }
 
-    async list() {
-        const users = await UserModel.find({})
+    async list(conditions: object) {
+        const { query } = this.ctx.request
+        const pageSize = parseInt(query.pageSize)
+        const page = parseInt(query.page)
+
+        const users = await UserModel.find(conditions)
+            .limit(pageSize)
+            .skip(page * pageSize)
+            .sort({
+                createdAt: 1,
+            })
+
         if (users) return users
         return null
     }
