@@ -28,6 +28,25 @@ class Loader {
             },
         });
     }
+    loadModel() {
+        const dirs = fs.readdirSync(__dirname + '/models');
+        Object.defineProperty(this.app.context, 'model', {
+            get() {
+                let loaded = {};
+                dirs.forEach(dir => {
+                    const splits = dir.split('.');
+                    if (!splits.includes('map') &&
+                        !splits.includes('DS_Store') &&
+                        !splits.includes('base')) {
+                        const name = splits[0];
+                        const model = require(__dirname + '/models/' + dir);
+                        loaded[name] = model;
+                    }
+                });
+                return loaded;
+            },
+        });
+    }
     /**
      * set Koa.ctx a global property service
      * you can directly use this.ctx.service.filename.method() in controller
@@ -51,7 +70,6 @@ class Loader {
                     loaded['service'] = {};
                     service.forEach(dir => {
                         const splits = dir.split('.');
-                        console.log(splits);
                         if (!splits.includes('map') &&
                             !splits.includes('DS_Store') &&
                             !splits.includes('base')) {
@@ -86,9 +104,10 @@ class Loader {
      * @memberof Loader
      */
     loadRouter() {
-        this.loadController();
-        this.loadService();
+        this.loadModel();
         this.loadConfig();
+        this.loadService();
+        this.loadController();
         const r = blueprint_1.default.getRoute();
         Object.keys(r).forEach(url => {
             r[url].forEach(object => {
