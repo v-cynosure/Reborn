@@ -11,37 +11,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const blueprint_1 = require("../blueprint");
 const base_1 = require("./base");
+const code_1 = require("../../constants/code");
 class Group extends base_1.default {
-    getConfig() {
-        return this.app['config'];
-    }
     async getUser() {
         try {
-            const user = await this.ctx.service.group.get();
+            const user = await this.ctx.service.group.findOne();
+            await this.ctx.service.group.counter(user);
             if (!user) {
-                return this.emit(404, '找不到该用户的信息');
+                return this.emit(code_1.default.USER_GET_INFO_ERROR, code_1.default.USER_GET_INFO_ERROR_MSG);
             }
-            this.emit(200, '成功返回', user);
+            this.emit(code_1.default.USER_GET_INFO_SUCCESS, code_1.default.USER_GET_INFO_SUCCESS_MSG, user);
         }
         catch (error) {
-            this.ctx.throw(500);
+            this.ctx.throw(code_1.default.SERVER_ERROR);
         }
     }
     async getUserList(conditions = {}) {
         try {
             const users = await this.ctx.service.group.list(conditions);
             if (!users) {
-                return this.emit(404, '竟然一个用户都没有');
+                return this.emit(code_1.default.USER_LIST_GET_ERROR, code_1.default.USER_LIST_GET_ERROR_MSG);
             }
-            this.emit(200, '成功返回用户', users);
+            this.emit(code_1.default.USER_LIST_GET_SUCCESS, code_1.default.USER_LIST_GET_SUCCESS_MSG, users);
         }
         catch (error) {
-            this.ctx.throw(500);
+            this.ctx.throw(code_1.default.SERVER_ERROR);
         }
     }
     async getUsersByDepartment() {
         const { department } = this.ctx.params;
         this.getUserList({ department });
+    }
+    async getUserBySearch() {
     }
 }
 __decorate([
@@ -62,4 +63,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Group.prototype, "getUsersByDepartment", null);
+__decorate([
+    blueprint_1.default.get('/api/users/search'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Group.prototype, "getUserBySearch", null);
 exports.default = Group;

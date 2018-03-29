@@ -80,7 +80,7 @@ class Loader {
 
                 if (!loaded['service']) {
                     loaded['service'] = {}
-                    console.log(service)
+
                     service.forEach(dir => {
                         const splits = dir.split('.')
 

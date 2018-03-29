@@ -12,6 +12,12 @@ interface DevConfig {
         secret: string
         exp: number
     }
+    app: {
+        userListInfo: Array<string>,
+        sortRule: {
+            createdAt: number
+        }
+    }
     mongodb: string
 }
 
@@ -28,6 +34,13 @@ const config: DevConfig = {
     token: {
         secret: 'xfiles-reborn',
         exp: 2592000000,
+    },
+    app: {
+        // 用户列表返回的字段名称
+        userListInfo: ['username', 'isUpdated'],
+        sortRule: {
+            createdAt: 1,
+        }
     },
     mongodb: 'mongodb://localhost:27017/reborn',
 }

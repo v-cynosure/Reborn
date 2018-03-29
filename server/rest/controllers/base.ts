@@ -9,12 +9,27 @@ class Controller {
         this.app = app
     }
 
+    getConfig() {
+        return (<any>this.app)['config']
+    }
+
     emit(code: number, message: string, payload?: object) {
         this.ctx.body = {
             code,
             message,
             payload,
         }
+    }
+
+    currentUser() {
+        const username = this.ctx.state.user
+        return username
+        // const user = await this.ctx.model.findOne({
+        //     username
+        // })
+
+        // if (user) return user
+        // return null
     }
 }
 

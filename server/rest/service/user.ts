@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt'
 import Service from './base'
 
 class User extends Service {
-    async get() {
+    async getMe() {
         const { username } = this.ctx.request.body
         const user = await this.ctx.model.user.findOne({ username })
 
@@ -28,11 +28,11 @@ class User extends Service {
     }
 
     async update(username: string, info: object) {
-        // const obj = Object.assign({}, info, { isUpdated: true })
         return await this.ctx.model.user.update(
             { username },
-            { ...info, isUpdated: true },
+            info,
             (error: any, docs: object) => {
+                console.log(docs)
                 return error ? false : true
             }
         )

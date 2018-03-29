@@ -26,6 +26,18 @@ const UserSchema = new Mongoose.Schema({
     email: {
         type: String,
     },
+    star: {
+        type: Array,
+        default: [],
+    },
+    stared: {
+        type: Array,
+        default: [],
+    },
+    visit: {
+        type: Number,
+        default: 0,
+    },
     isUpdated: {
         type: Boolean,
         default: false,
@@ -33,7 +45,7 @@ const UserSchema = new Mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    }
+    },
 })
 
 const UserModel = Mongoose.model('User', UserSchema)

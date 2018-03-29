@@ -93,6 +93,12 @@
   version "3.2.2"
   resolved "https://registry.npmjs.org/@types/koa-compose/-/koa-compose-3.2.2.tgz#dc106e000bbf92a3ac900f756df47344887ee847"
 
+"@types/koa-jwt@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.npmjs.org/@types/koa-jwt/-/koa-jwt-3.3.0.tgz#b30fe8a96bbe1aec44cd6da24d91f2963e62e3bf"
+  dependencies:
+    koa-jwt "*"
+
 "@types/koa-logger@^3.1.0":
   version "3.1.0"
   resolved "https://registry.npmjs.org/@types/koa-logger/-/koa-logger-3.1.0.tgz#133acdbc56d87b5a559cab25528b087381a8fc0d"
@@ -3018,7 +3024,7 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
 
-koa-jwt@^3.3.1:
+koa-jwt@*, koa-jwt@^3.3.1:
   version "3.3.1"
   resolved "https://registry.npmjs.org/koa-jwt/-/koa-jwt-3.3.1.tgz#2316b763a5137a4062696d3cd6ccc1712324b974"
   dependencies:

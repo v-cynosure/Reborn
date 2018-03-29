@@ -3,8 +3,8 @@ import * as bcrypt from 'bcrypt'
 import * as jsonwebtoken from 'jsonwebtoken'
 import Controller from './base'
 import bp from '../blueprint'
-const UserModel = require('../models/user')
 import { Auth } from '../middlewares/'
+import code from '../../constants/code'
 
 class User extends Controller {
     getConfig() {
@@ -13,23 +13,26 @@ class User extends Controller {
 
     @bp.post('/api/register')
     async register() {
-        let enhancePassword = null
-        const { username, email, password } = this.ctx.request.body
+        const { username} = this.ctx.request.body
 
         try {
-            const isUserExit = await this.ctx.service.user.get()
+            const isUserExist = await this.ctx.service.user.getMe()
 
-            if (isUserExit) {
-                return this.emit(406, '该用户已存在，请使用密码登录')
+            if (isUserExist) {
+                return this.emit(code.USER_IS_EXIST, code.USER_IS_EXIST_MSG)
             }
 
             await this.ctx.service.user.create()
-            this.emit(200, '注册成功', {
-                user: username,
-                token: Auth.signToken(username),
-            })
+            this.emit(
+                code.USER_REGISTER_SUCCESS,
+                code.USER_REGISTER_SUCCESS_MSG,
+                {
+                    user: username,
+                    token: Auth.signToken(username),
+                }
+            )
         } catch (error) {
-            this.ctx.throw(500)
+            this.ctx.throw(code.SERVER_ERROR)
         }
     }
 
@@ -39,9 +42,12 @@ class User extends Controller {
         const { username, email, password } = this.ctx.request.body
 
         try {
-            const user = await service.user.get()
+            const user = await service.user.getMe()
             if (!user) {
-                return this.emit(403, '请先注册')
+                return this.emit(
+                    code.USER_IS_NOT_EXIST,
+                    code.USER_IS_NOT_EXIST_MSG
+                )
             }
 
             const isCorrect = await service.user.checkPassword(
@@ -49,15 +55,18 @@ class User extends Controller {
                 user.password
             )
             if (!isCorrect) {
-                return this.emit(403, '密码错误')
+                return this.emit(
+                    code.USER_PASSWORD_ERROR,
+                    code.USER_PASSWORD_ERROR_MSG
+                )
             }
 
             this.ctx.status = 200
-            this.emit(200, '登录成功', {
+            this.emit(code.USER_LOGIN_SUCCESS, code.USER_LOGIN_SUCCESS_MSG, {
                 token: Auth.signToken(username),
             })
         } catch (error) {
-            this.ctx.throw(500)
+            this.ctx.throw(code.SERVER_ERROR)
         }
     }
 
@@ -66,20 +75,28 @@ class User extends Controller {
         console.log(this.ctx.state)
     }
 
+    /**
+     * after update, set isUpdated true
+     */
     @bp.put('/api/update/me')
     async updateMe() {
         const { service } = this.ctx
-        const { username } = this.ctx.state.user
         const info = this.ctx.request.body
-        console.log('tttt')
+
         try {
-            const isUpdate = await service.user.update(username, info)
-            if (!isUpdate) {
-                return this.emit(500, '更新失败')
+            const hasUpdated = await service.user.update(this.currentUser(), {
+                ...info,
+                isUpdated: true,
+            })
+            if (!hasUpdated) {
+                return this.emit(
+                    code.USER_UPDATE_ERROR,
+                    code.USER_UPDATE_ERROR_MSG
+                )
             }
-            this.emit(200, '更新成功')
+            this.emit(code.USER_UPDATE_SUCCESS, code.USER_UPDATE_SUCCESS_MSG)
         } catch (error) {
-            this.ctx.throw(500)
+            this.ctx.throw(code.SERVER_ERROR)
         }
     }
 
