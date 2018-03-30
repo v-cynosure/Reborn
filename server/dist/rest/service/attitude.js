@@ -2,10 +2,47 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = require("./base");
 class Attitude extends base_1.default {
-    async star(current, target) {
-        this.ctx.model.user.update({
-            username: current,
-        }, { $push: { 'star': target } });
+    /**
+     * add user to star or stared list
+     * @param origin the person who star or stared
+     * @param target the person who star or stared
+     * @param list star or stared
+     */
+    async addStar(target) {
+        const origin = this.currentUser();
+        await this.ctx.model.user.update({ username: origin }, { $push: { star: { id: target._id, createdAt: new Date() } } });
+    }
+    async removeStar(target) {
+        const origin = this.currentUser();
+        await this.ctx.model.user.update({ username: origin }, { $pull: { star: { id: target._id, createdAt: new Date() } } });
+    }
+    async countStar(username, inc) {
+        await this.ctx.model.user.update({ username }, { $inc: { starCount: inc } });
+    }
+    async addStared(origin) {
+        const { targetUser } = this.ctx.request.body;
+        await this.ctx.model.user.update({ username: targetUser }, { $push: { stared: { id: origin._id, createdAt: new Date() } } });
+    }
+    async removeStared(target) {
+        const origin = this.currentUser();
+        await this.ctx.model.user.update({ username: origin }, { $pull: { stared: { id: target._id, createdAt: new Date() } } });
+    }
+    async countStared(username, inc) {
+        await this.ctx.model.user.update({ username }, { $inc: { staredCount: inc } });
+    }
+    async getStarList() {
+        const { username } = this.currentUser();
+        const users = await this.ctx.model.user
+            .find({ username })
+            .populate('star.id');
+        return users;
+    }
+    async getStaredList() {
+        const { username } = this.currentUser();
+        const users = await this.ctx.model.user
+            .find({ username })
+            .populate('stared.id');
+        return users;
     }
 }
-exports.default = Attitude;
+module.exports = Attitude;

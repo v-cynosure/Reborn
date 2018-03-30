@@ -30,9 +30,17 @@ const UserSchema = new Mongoose.Schema({
         type: Array,
         default: [],
     },
+    starCount: {
+        type: Number,
+        default: 0,
+    },
     stared: {
         type: Array,
         default: [],
+    },
+    staredCount: {
+        type: Number,
+        default: 0,
     },
     visit: {
         type: Number,

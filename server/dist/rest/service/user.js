@@ -3,9 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcrypt");
 const base_1 = require("./base");
 class User extends base_1.default {
-    async getMe() {
-        const { username } = this.ctx.request.body;
-        const user = await this.ctx.model.user.findOne({ username });
+    async find(username, infoList) {
+        const user = await this.ctx.model.user.findOne({ username }, infoList);
         if (user)
             return user;
         return null;
@@ -25,7 +24,6 @@ class User extends base_1.default {
     }
     async update(username, info) {
         return await this.ctx.model.user.update({ username }, info, (error, docs) => {
-            console.log(docs);
             return error ? false : true;
         });
     }
