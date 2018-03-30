@@ -3,9 +3,8 @@ import * as bcrypt from 'bcrypt'
 import Service from './base'
 
 class User extends Service {
-    async getMe() {
-        const { username } = this.ctx.request.body
-        const user = await this.ctx.model.user.findOne({ username })
+    async find(username: string, infoList?: Array<string>) {
+        const user = await this.ctx.model.user.findOne({ username }, infoList)
 
         if (user) return user
         return null
@@ -32,7 +31,6 @@ class User extends Service {
             { username },
             info,
             (error: any, docs: object) => {
-                console.log(docs)
                 return error ? false : true
             }
         )

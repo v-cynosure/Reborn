@@ -5,11 +5,26 @@ import Controller from './base'
 class Attitude extends Controller {
     @bp.post('/api/attitude/star/create')
     async star() {
+        const config = this.getConfig()
         const currentUser = this.currentUser()
         const { targetUser } = this.ctx.request.body
-        const result = await this.ctx.service.star(currentUser, targetUser)
-        if (result) {
-            this.emit(200, '点赞成功')
+        try {
+            const currentUserInfo = this.ctx.service.user.find(
+                currentUser,
+                config.app.userListInfo
+            )
+            const targetUserInfo = this.ctx.service.user.find(
+                targetUser,
+                config.app.userListInfo
+            )
+
+            this.ctx.service.addStar(targetUserInfo)
+            this.ctx.service.countStar(currentUser, 1)
+            this.ctx.service.addStared(currentUserInfo)
+            this.ctx.service.countStared(targetUser, 1)
+        } catch (error) {
+            this.emit(400, '更新失败')
+            this.ctx.throw(500)
         }
     }
 

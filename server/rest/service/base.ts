@@ -12,6 +12,21 @@ class Service {
     getConfig() {
         return (<any>this.app)['config']
     }
+
+    currentUser() {
+        const username = this.ctx.state.user
+        return username
+    }
+
+    async currentUserInfo() {
+        const username = this.currentUser()
+        const user = await this.ctx.model.findOne({
+            username
+        })
+
+        if (user) return user
+        return null
+    }
 }
 
 export default Service

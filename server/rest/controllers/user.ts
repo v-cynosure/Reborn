@@ -16,7 +16,7 @@ class User extends Controller {
         const { username} = this.ctx.request.body
 
         try {
-            const isUserExist = await this.ctx.service.user.getMe()
+            const isUserExist = await this.ctx.service.user.find(username)
 
             if (isUserExist) {
                 return this.emit(code.USER_IS_EXIST, code.USER_IS_EXIST_MSG)
@@ -42,7 +42,7 @@ class User extends Controller {
         const { username, email, password } = this.ctx.request.body
 
         try {
-            const user = await service.user.getMe()
+            const user = await service.user.find(username)
             if (!user) {
                 return this.emit(
                     code.USER_IS_NOT_EXIST,
