@@ -81,10 +81,11 @@ class User extends Controller {
     @bp.put('/api/update/me')
     async updateMe() {
         const { service } = this.ctx
+        const current = this.currentUserName()
         const info = this.ctx.request.body
 
         try {
-            const hasUpdated = await service.user.update(this.currentUser(), {
+            const hasUpdated = await service.user.update(current, {
                 ...info,
                 isUpdated: true,
             })

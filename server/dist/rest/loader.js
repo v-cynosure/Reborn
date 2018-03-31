@@ -92,7 +92,11 @@ class Loader {
     loadController() {
         const dirs = fs.readdirSync(__dirname + '/controllers');
         dirs.forEach(filename => {
-            require(__dirname + '/controllers/' + filename).default;
+            if (!filename.includes('map') &&
+                !filename.includes('DS_Store') &&
+                !filename.includes('base')) {
+                require(__dirname + '/controllers/' + filename).default;
+            }
         });
     }
     /**

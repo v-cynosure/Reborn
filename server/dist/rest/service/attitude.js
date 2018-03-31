@@ -2,46 +2,37 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = require("./base");
 class Attitude extends base_1.default {
-    /**
-     * add user to star or stared list
-     * @param origin the person who star or stared
-     * @param target the person who star or stared
-     * @param list star or stared
-     */
-    async addStar(target) {
-        const origin = this.currentUser();
-        await this.ctx.model.user.update({ username: origin }, { $push: { star: { id: target._id, createdAt: new Date() } } });
+    async addStar(id) {
+        await this.ctx.model.user.update({ username: this.currentUserName() }, { $push: { star: id } });
     }
-    async removeStar(target) {
-        const origin = this.currentUser();
-        await this.ctx.model.user.update({ username: origin }, { $pull: { star: { id: target._id, createdAt: new Date() } } });
+    async removeStar(id) {
+        await this.ctx.model.user.update({ username: this.currentUserName() }, { $pull: { star: id } });
     }
     async countStar(username, inc) {
         await this.ctx.model.user.update({ username }, { $inc: { starCount: inc } });
     }
-    async addStared(origin) {
-        const { targetUser } = this.ctx.request.body;
-        await this.ctx.model.user.update({ username: targetUser }, { $push: { stared: { id: origin._id, createdAt: new Date() } } });
+    async addStared(id) {
+        const { favorite } = this.ctx.request.body;
+        await this.ctx.model.user.update({ username: favorite }, { $push: { stared: id } });
     }
-    async removeStared(target) {
-        const origin = this.currentUser();
-        await this.ctx.model.user.update({ username: origin }, { $pull: { stared: { id: target._id, createdAt: new Date() } } });
+    async removeStared(id) {
+        let { favorite } = this.ctx.request.body;
+        await this.ctx.model.user.update({ username: favorite }, { $pull: { stared: id } });
     }
     async countStared(username, inc) {
         await this.ctx.model.user.update({ username }, { $inc: { staredCount: inc } });
     }
-    async getStarList() {
-        const { username } = this.currentUser();
+    async starList() {
+        console.log(this.currentUserName());
         const users = await this.ctx.model.user
-            .find({ username })
-            .populate('star.id');
-        return users;
+            .find({ username: this.currentUserName() })
+            .populate('star');
+        return users[0].star;
     }
-    async getStaredList() {
-        const { username } = this.currentUser();
+    async staredList() {
         const users = await this.ctx.model.user
-            .find({ username })
-            .populate('stared.id');
+            .find({ username: this.currentUserName() })
+            .populate('stared');
         return users;
     }
 }

@@ -5,59 +5,55 @@ import Controller from './base'
 class Attitude extends Controller {
     @bp.post('/api/attitude/star/create')
     async star() {
-        const config = this.getConfig()
-        const currentUser = this.currentUser()
-        const { targetUser } = this.ctx.request.body
-        try {
-            const currentUserInfo = await this.ctx.service.user.find(
-                currentUser,
-                config.app.userListInfo
-            )
-            const targetUserInfo = await this.ctx.service.user.find(
-                targetUser,
-                config.app.userListInfo
-            )
+        const { favorite } = this.ctx.request.body
+        if (!favorite) {
+            return this.emit(404, '请携带参数')
+        }
 
-            await this.ctx.service.attitude.addStar(targetUserInfo)
-            await this.ctx.service.attitude.countStar(currentUser, 1)
-            await this.ctx.service.attitude.addStared(currentUserInfo)
-            await this.ctx.service.attitude.countStared(targetUser, 1)
+        try {
+            const current = await this.currentUser()
+            const target = await this.ctx.service.user.find(favorite)
+            const currentId = current._id
+            const targetId = target._id
+
+            await this.ctx.service.attitude.addStar(targetId)
+            await this.ctx.service.attitude.countStar(current.username, 1)
+            await this.ctx.service.attitude.addStared(currentId)
+            await this.ctx.service.attitude.countStared(target.username, 1)
         } catch (error) {
             this.emit(400, '点赞失败')
             this.ctx.throw(500)
         }
     }
 
-    @bp.post('/api/attitude/star/destory')
+    @bp.post('/api/attitude/star/destroy')
     async unStar() {
-        const config = this.getConfig()
-        const currentUser = this.currentUser()
-        const { targetUser } = this.ctx.request.body
-        try {
-            const currentUserInfo = await this.ctx.service.user.find(
-                currentUser,
-                config.app.userListInfo
-            )
-            const targetUserInfo = await this.ctx.service.user.find(
-                targetUser,
-                config.app.userListInfo
-            )
+        const { favorite } = this.ctx.request.body
+        if (!favorite) {
+            return this.emit(404, '请携带参数')
+        }
 
-            await this.ctx.service.attitude.removeStar(targetUserInfo)
-            await this.ctx.service.attitude.countStar(currentUser, -1)
-            await this.ctx.service.attitude.removeStared(currentUserInfo)
-            await this.ctx.service.attitude.countStared(targetUser, -1)
+        try {
+            const current = await this.currentUser()
+            const target = await this.ctx.service.user.find(favorite)
+            const currentId = current._id
+            const targetId = target._id
+
+            await this.ctx.service.attitude.removeStar(targetId)
+            await this.ctx.service.attitude.countStar(current.username, -1)
+            await this.ctx.service.attitude.removeStared(currentId)
+            await this.ctx.service.attitude.countStared(target.username, -1)
         } catch (error) {
             this.emit(400, '取消点赞失败')
             this.ctx.throw(500)
         }
     }
 
-    @bp.post('/api/attitude/star/list')
-    async starList() {
+    @bp.get('/api/attitude/star/list')
+    async getStarList() {
         try {
-            const users = await this.ctx.service.user.getStarList()
-            if (!users) {
+            const users = await this.ctx.service.attitude.starList()
+            if (!users || users.length === 0) {
                 return this.emit(400, '还没有点赞过的人')
             }
             this.emit(200, '获取点赞列表成功', users)
@@ -67,9 +63,9 @@ class Attitude extends Controller {
     }
 
     @bp.get('/api/attitude/stared/list')
-    async staredList() {
+    async getStaredList() {
         try {
-            const users = await this.ctx.service.user.getStaredList()
+            const users = await this.ctx.service.attitude.staredList()
             if (!users) {
                 return this.emit(400, '还没有被别人点赞过呢QWQ')
             }

@@ -13,16 +13,19 @@ const blueprint_1 = require("../blueprint");
 const base_1 = require("./base");
 class Attitude extends base_1.default {
     async star() {
-        const config = this.getConfig();
-        const currentUser = this.currentUser();
-        const { targetUser } = this.ctx.request.body;
+        const { favorite } = this.ctx.request.body;
+        if (!favorite) {
+            return this.emit(404, '请携带参数');
+        }
         try {
-            const currentUserInfo = await this.ctx.service.user.find(currentUser, config.app.userListInfo);
-            const targetUserInfo = await this.ctx.service.user.find(targetUser, config.app.userListInfo);
-            await this.ctx.service.attitude.addStar(targetUserInfo);
-            await this.ctx.service.attitude.countStar(currentUser, 1);
-            await this.ctx.service.attitude.addStared(currentUserInfo);
-            await this.ctx.service.attitude.countStared(targetUser, 1);
+            const current = await this.currentUser();
+            const target = await this.ctx.service.user.find(favorite);
+            const currentId = current._id;
+            const targetId = target._id;
+            await this.ctx.service.attitude.addStar(targetId);
+            await this.ctx.service.attitude.countStar(current.username, 1);
+            await this.ctx.service.attitude.addStared(currentId);
+            await this.ctx.service.attitude.countStared(target.username, 1);
         }
         catch (error) {
             this.emit(400, '点赞失败');
@@ -30,26 +33,29 @@ class Attitude extends base_1.default {
         }
     }
     async unStar() {
-        const config = this.getConfig();
-        const currentUser = this.currentUser();
-        const { targetUser } = this.ctx.request.body;
+        const { favorite } = this.ctx.request.body;
+        if (!favorite) {
+            return this.emit(404, '请携带参数');
+        }
         try {
-            const currentUserInfo = await this.ctx.service.user.find(currentUser, config.app.userListInfo);
-            const targetUserInfo = await this.ctx.service.user.find(targetUser, config.app.userListInfo);
-            await this.ctx.service.attitude.removeStar(targetUserInfo);
-            await this.ctx.service.attitude.countStar(currentUser, -1);
-            await this.ctx.service.attitude.removeStared(currentUserInfo);
-            await this.ctx.service.attitude.countStared(targetUser, -1);
+            const current = await this.currentUser();
+            const target = await this.ctx.service.user.find(favorite);
+            const currentId = current._id;
+            const targetId = target._id;
+            await this.ctx.service.attitude.removeStar(targetId);
+            await this.ctx.service.attitude.countStar(current.username, -1);
+            await this.ctx.service.attitude.removeStared(currentId);
+            await this.ctx.service.attitude.countStared(target.username, -1);
         }
         catch (error) {
             this.emit(400, '取消点赞失败');
             this.ctx.throw(500);
         }
     }
-    async starList() {
+    async getStarList() {
         try {
-            const users = await this.ctx.service.user.getStarList();
-            if (!users) {
+            const users = await this.ctx.service.attitude.starList();
+            if (!users || users.length === 0) {
                 return this.emit(400, '还没有点赞过的人');
             }
             this.emit(200, '获取点赞列表成功', users);
@@ -58,9 +64,9 @@ class Attitude extends base_1.default {
             this.ctx.throw(500);
         }
     }
-    async staredList() {
+    async getStaredList() {
         try {
-            const users = await this.ctx.service.user.getStaredList();
+            const users = await this.ctx.service.attitude.staredList();
             if (!users) {
                 return this.emit(400, '还没有被别人点赞过呢QWQ');
             }
@@ -78,21 +84,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Attitude.prototype, "star", null);
 __decorate([
-    blueprint_1.default.post('/api/attitude/star/destory'),
+    blueprint_1.default.post('/api/attitude/star/destroy'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Attitude.prototype, "unStar", null);
 __decorate([
-    blueprint_1.default.post('/api/attitude/star/list'),
+    blueprint_1.default.get('/api/attitude/star/list'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], Attitude.prototype, "starList", null);
+], Attitude.prototype, "getStarList", null);
 __decorate([
     blueprint_1.default.get('/api/attitude/stared/list'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], Attitude.prototype, "staredList", null);
+], Attitude.prototype, "getStaredList", null);
 exports.default = Attitude;

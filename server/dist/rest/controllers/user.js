@@ -63,9 +63,10 @@ class User extends base_1.default {
      */
     async updateMe() {
         const { service } = this.ctx;
+        const current = this.currentUserName();
         const info = this.ctx.request.body;
         try {
-            const hasUpdated = await service.user.update(this.currentUser(), Object.assign({}, info, { isUpdated: true }));
+            const hasUpdated = await service.user.update(current, Object.assign({}, info, { isUpdated: true }));
             if (!hasUpdated) {
                 return this.emit(code_1.default.USER_UPDATE_ERROR, code_1.default.USER_UPDATE_ERROR_MSG);
             }

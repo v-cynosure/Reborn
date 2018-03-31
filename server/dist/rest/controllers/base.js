@@ -15,14 +15,17 @@ class Controller {
             payload,
         };
     }
-    currentUser() {
-        const username = this.ctx.state.user;
-        return username;
-        // const user = await this.ctx.model.findOne({
-        //     username
-        // })
-        // if (user) return user
-        // return null
+    async currentUser() {
+        const username = this.currentUserName();
+        const user = await this.ctx.model.user.findOne({
+            username
+        });
+        if (user)
+            return user;
+        return null;
+    }
+    currentUserName() {
+        return this.ctx.state.user;
     }
 }
 exports.default = Controller;

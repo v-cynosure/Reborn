@@ -93,7 +93,7 @@ class Loader {
                             const mod = require(__dirname + '/service/' + dir)
                             loaded['service'][name] = new mod(this, self.app)
                         }
-                  })
+                    })
                     return loaded.service
                 }
                 return loaded.service
@@ -108,8 +108,15 @@ class Loader {
      */
     loadController() {
         const dirs = fs.readdirSync(__dirname + '/controllers')
+
         dirs.forEach(filename => {
-            require(__dirname + '/controllers/' + filename).default
+            if (
+                !filename.includes('map') &&
+                !filename.includes('DS_Store') &&
+                !filename.includes('base')
+            ) {
+                require(__dirname + '/controllers/' + filename).default
+            }
         })
     }
 

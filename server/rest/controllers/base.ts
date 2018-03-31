@@ -21,15 +21,18 @@ class Controller {
         }
     }
 
-    currentUser() {
-        const username = this.ctx.state.user
-        return username
-        // const user = await this.ctx.model.findOne({
-        //     username
-        // })
+    async currentUser() {
+        const username = this.currentUserName()
+        const user = await this.ctx.model.user.findOne({
+            username
+        })
 
-        // if (user) return user
-        // return null
+        if (user) return user
+        return null
+    }
+
+    currentUserName() {
+        return this.ctx.state.user
     }
 }
 

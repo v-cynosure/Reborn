@@ -2,25 +2,17 @@ import * as Koa from 'koa'
 import Service from './base'
 
 class Attitude extends Service {
-    /**
-     * add user to star or stared list
-     * @param origin the person who star or stared
-     * @param target the person who star or stared
-     * @param list star or stared
-     */
-    async addStar(target: object) {
-        const origin = this.currentUser()
+    async addStar(id: string) {
         await this.ctx.model.user.update(
-            { username: origin },
-            { $push: { star: { id: target._id, createdAt: new Date() } } }
+            { username: this.currentUserName() },
+            { $push: { star: id } }
         )
     }
 
-    async removeStar(target: object) {
-        const origin = this.currentUser()
+    async removeStar(id: string) {
         await this.ctx.model.user.update(
-            { username: origin },
-            { $pull: { star: { id: target._id, createdAt: new Date() } } }
+            { username: this.currentUserName() },
+            { $pull: { star: id } }
         )
     }
 
@@ -31,19 +23,19 @@ class Attitude extends Service {
         )
     }
 
-    async addStared(origin: object) {
-        const { targetUser } = this.ctx.request.body
+    async addStared(id: string) {
+        const { favorite } = this.ctx.request.body
         await this.ctx.model.user.update(
-            { username: targetUser },
-            { $push: { stared: { id: origin._id, createdAt: new Date() } } }
+            { username: favorite },
+            { $push: { stared: id } }
         )
     }
 
-    async removeStared(target: object) {
-        const origin = this.currentUser()
+    async removeStared(id: string) {
+        let { favorite } = this.ctx.request.body
         await this.ctx.model.user.update(
-            { username: origin },
-            { $pull: { stared: { id: target._id, createdAt: new Date() } } }
+            { username: favorite },
+            { $pull: { stared: id } }
         )
     }
 
@@ -54,19 +46,18 @@ class Attitude extends Service {
         )
     }
 
-    async getStarList() {
-        const { username } = this.currentUser()
+    async starList() {
+        console.log(this.currentUserName())
         const users = await this.ctx.model.user
-            .find({ username })
-            .populate('star.id')
-        return users
+            .find({ username: this.currentUserName() })
+            .populate('star')
+        return users[0].star
     }
 
-    async getStaredList() {
-        const { username } = this.currentUser()
+    async staredList() {
         const users = await this.ctx.model.user
-            .find({ username })
-            .populate('stared.id')
+            .find({ username: this.currentUserName() })
+            .populate('stared')
         return users
     }
 }

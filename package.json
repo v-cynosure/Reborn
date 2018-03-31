@@ -8,7 +8,7 @@
   "scripts": {
     "start": "parcel ./client/public/index.html",
     "watch-server": "concurrently --kill-others \"tsc --watch\" \"server/dist/index.js\"",
-    "tsc": "tsc --watch",
+    "tsc": "tsc --watch, rm -r server/dist",
     "serve": "nodemon server/dist/index.js",
     "build": "parcel build client/public/index.html --public-url ./",
     "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'",

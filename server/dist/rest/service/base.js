@@ -8,18 +8,17 @@ class Service {
     getConfig() {
         return this.app['config'];
     }
-    currentUser() {
-        const username = this.ctx.state.user;
-        return username;
-    }
-    async currentUserInfo() {
-        const username = this.currentUser();
-        const user = await this.ctx.model.findOne({
-            username
+    async currentUser() {
+        const username = this.currentUserName();
+        const user = await this.ctx.model.user.findOne({
+            username,
         });
         if (user)
             return user;
         return null;
+    }
+    currentUserName() {
+        return this.ctx.state.user;
     }
 }
 exports.default = Service;

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/9.8.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js serce
+  /usr/local/Cellar/node/9.8.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js server
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -24,7 +24,7 @@ npm manifest:
     "scripts": {
       "start": "parcel ./client/public/index.html",
       "watch-server": "concurrently --kill-others \"tsc --watch\" \"server/dist/index.js\"",
-      "tsc": "tsc --watch",
+      "tsc": "tsc --watch && rm -r server/dist",
       "serve": "nodemon server/dist/index.js",
       "build": "parcel build client/public/index.html --public-url ./",
       "fix": "tslint --fix -c ./tslint.json 'src/**/*{.ts,.tsx}'",
@@ -33,6 +33,7 @@ npm manifest:
     "dependencies": {
       "@koa/cors": "^2.2.1",
       "@types/koa": "^2.0.44",
+      "@types/koa-jwt": "^3.3.0",
       "@types/react": "^16.0.40",
       "autoprefixer": "^8.1.0",
       "axios": "^0.18.0",
@@ -173,6 +174,12 @@ Lockfile:
   "@types/koa-compose@*":
     version "3.2.2"
     resolved "https://registry.npmjs.org/@types/koa-compose/-/koa-compose-3.2.2.tgz#dc106e000bbf92a3ac900f756df47344887ee847"
+  
+  "@types/koa-jwt@^3.3.0":
+    version "3.3.0"
+    resolved "https://registry.npmjs.org/@types/koa-jwt/-/koa-jwt-3.3.0.tgz#b30fe8a96bbe1aec44cd6da24d91f2963e62e3bf"
+    dependencies:
+      koa-jwt "*"
   
   "@types/koa-logger@^3.1.0":
     version "3.1.0"
@@ -3099,7 +3106,7 @@ Lockfile:
     version "1.0.0"
     resolved "https://registry.npmjs.org/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
   
-  koa-jwt@^3.3.1:
+  koa-jwt@*, koa-jwt@^3.3.1:
     version "3.3.1"
     resolved "https://registry.npmjs.org/koa-jwt/-/koa-jwt-3.3.1.tgz#2316b763a5137a4062696d3cd6ccc1712324b974"
     dependencies:
@@ -5769,7 +5776,7 @@ Lockfile:
       window-size "0.1.0"
 
 Trace: 
-  Error: Command "serce" not found. Did you mean "serve"?
+  Error: Command "server" not found. Did you mean "serve"?
       at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
       at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:87307:17
       at Generator.next (<anonymous>)
