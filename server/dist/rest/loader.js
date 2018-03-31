@@ -9,6 +9,7 @@ class Loader {
         this.router = new Router();
         this.controller = {};
         this.app = app;
+        this.loadConfig();
     }
     /**
      * read all config in config dir and concat
@@ -108,7 +109,6 @@ class Loader {
      * @memberof Loader
      */
     loadRouter() {
-        this.loadConfig();
         this.loadModel();
         this.loadService();
         this.loadController();

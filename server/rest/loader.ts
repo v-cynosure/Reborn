@@ -11,6 +11,7 @@ class Loader {
 
     constructor(app: Koa) {
         this.app = app
+        this.loadConfig()
     }
 
     /**
@@ -129,7 +130,6 @@ class Loader {
      * @memberof Loader
      */
     loadRouter() {
-        this.loadConfig()
         this.loadModel()
         this.loadService()
         this.loadController()
