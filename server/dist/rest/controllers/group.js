@@ -39,10 +39,33 @@ class Group extends base_1.default {
         }
     }
     async getUsersByDepartment() {
-        const { department } = this.ctx.params;
-        this.getUserList({ department });
+        try {
+            const condition = this.ctx.params;
+            const user = await this.ctx.service.group.filter(condition);
+            if (!user) {
+                return this.emit(code_1.default.USER_GET_INFO_ERROR, code_1.default.USER_GET_INFO_ERROR_MSG);
+            }
+            this.emit(code_1.default.USER_GET_INFO_SUCCESS, code_1.default.USER_GET_INFO_SUCCESS_MSG, user);
+        }
+        catch (error) {
+            this.ctx.throw(code_1.default.SERVER_ERROR);
+            return this.emit(code_1.default.USER_GET_INFO_ERROR, code_1.default.USER_GET_INFO_ERROR_MSG);
+        }
     }
     async getUserBySearch() {
+        try {
+            const condition = this.ctx.params;
+            console.log(JSON.stringify(condition));
+            const user = await this.ctx.service.group.search(condition);
+            await this.ctx.service.group.counter(user);
+            if (!user) {
+                return this.emit(code_1.default.USER_GET_INFO_ERROR, code_1.default.USER_GET_INFO_ERROR_MSG);
+            }
+            this.emit(code_1.default.USER_GET_INFO_SUCCESS, code_1.default.USER_GET_INFO_SUCCESS_MSG, user);
+        }
+        catch (error) {
+            this.ctx.throw(code_1.default.SERVER_ERROR);
+        }
     }
 }
 __decorate([
@@ -58,13 +81,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Group.prototype, "getUserList", null);
 __decorate([
-    blueprint_1.default.get('/api/users/:department'),
+    blueprint_1.default.get('/api/users/department/:department'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Group.prototype, "getUsersByDepartment", null);
 __decorate([
-    blueprint_1.default.get('/api/users/search'),
+    blueprint_1.default.get('/api/users/search/:keyword'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

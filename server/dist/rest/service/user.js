@@ -7,7 +7,7 @@ class User extends base_1.default {
         const user = await this.ctx.model.user.findOne({ username }, infoList);
         if (user)
             return user;
-        return null;
+        // return null
     }
     async checkPassword(password1, password2) {
         const isCorrect = await bcrypt.compare(password1, password2);

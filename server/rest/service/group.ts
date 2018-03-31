@@ -19,11 +19,11 @@ class Group extends Service {
     }
 
     /**
-     * 获取用户列表
+     * 精确查询
      * @param conditions 查询条件
      * @return 返回满足条件的用户列表
      */
-    async list(conditions: object) {
+    async filter(conditions: object) {
         const { query } = this.ctx.request
         const pageSize = parseInt(query.pageSize)
         const page = parseInt(query.page)
@@ -34,7 +34,31 @@ class Group extends Service {
             .limit(pageSize)
             .skip(page * pageSize)
             .sort(config.app.sortRule)
+    }
 
+    /**
+     * 模糊查询
+     * @param conditions 查询条件
+     * @return 返回满足条件的用户列表
+     */
+    async search(conditions: object) {
+        const { query } = this.ctx.request
+        const pageSize = parseInt(query.pageSize)
+        const page = parseInt(query.page)
+        const config = this.getConfig()
+
+        const reg = new RegExp(Object.values(conditions)[0], 'i')
+        const queryCondition: any = []
+        config.search.words.forEach((element: any) => {
+            queryCondition.push({
+                [element]: reg,
+            })
+        })
+        const users = await this.ctx.model.user
+            .find({ $or: queryCondition }, config.app.userListInfo)
+            .limit(pageSize)
+            .skip(page * pageSize)
+            .sort(config.app.sortRule)
         if (users) return users
         return null
     }
