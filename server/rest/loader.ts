@@ -21,10 +21,10 @@ class Loader {
      */
     loadConfig() {
         const isProEnv = process.env.NODE_ENV === 'production'
-        const configDef = path.join(__dirname, '../config/config.default.js')
+        const configDef = path.join(__dirname, '../config/config.default.ts')
         const configEnv = path.join(
             __dirname,
-            isProEnv ? '../config/config.pro.js' : '../config/config.dev.js'
+            isProEnv ? '../config/config.pro.ts' : '../config/config.dev.ts'
         )
         const conf = require(configEnv)
         const confDef = require(configDef)
@@ -41,20 +41,29 @@ class Loader {
 
         Object.defineProperty(this.app.context, 'model', {
             get() {
-                let loaded = {}
-                dirs.forEach(dir => {
-                    const splits = dir.split('.')
-                    if (
-                        !splits.includes('map') &&
-                        !splits.includes('DS_Store') &&
-                        !splits.includes('base')
-                    ) {
-                        const name = splits[0]
-                        const model = require(__dirname + '/models/' + dir)
-                        ;(<any>loaded)[name] = model
-                    }
-                })
-                return loaded
+                // set cache
+                if (!(<any>this)['cache']) {
+                    ;(<any>this)['cache'] = {}
+                }
+                const loaded = (<any>this)['cache']
+
+                if (!loaded['model']) {
+                    loaded['model'] = {}
+                    dirs.forEach(dir => {
+                        const splits = dir.split('.')
+                        if (
+                            !splits.includes('map') &&
+                            !splits.includes('DS_Store') &&
+                            !splits.includes('base')
+                        ) {
+                            const name = splits[0]
+                            const model = require(__dirname + '/models/' + dir)
+                            ;(<any>loaded)[model][name] = model
+                        }
+                    })
+                    return loaded.model
+                }
+                return loaded.model
             },
         })
     }

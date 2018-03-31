@@ -33,18 +33,27 @@ class Loader {
         const dirs = fs.readdirSync(__dirname + '/models');
         Object.defineProperty(this.app.context, 'model', {
             get() {
-                let loaded = {};
-                dirs.forEach(dir => {
-                    const splits = dir.split('.');
-                    if (!splits.includes('map') &&
-                        !splits.includes('DS_Store') &&
-                        !splits.includes('base')) {
-                        const name = splits[0];
-                        const model = require(__dirname + '/models/' + dir);
-                        loaded[name] = model;
-                    }
-                });
-                return loaded;
+                // set cache
+                if (!this['cache']) {
+                    ;
+                    this['cache'] = {};
+                }
+                const loaded = this['cache'];
+                if (!loaded['model']) {
+                    loaded['model'] = {};
+                    dirs.forEach(dir => {
+                        const splits = dir.split('.');
+                        if (!splits.includes('map') &&
+                            !splits.includes('DS_Store') &&
+                            !splits.includes('base')) {
+                            const name = splits[0];
+                            const model = require(__dirname + '/models/' + dir);
+                            loaded[model][name] = model;
+                        }
+                    });
+                    return loaded.model;
+                }
+                return loaded.model;
             },
         });
     }
