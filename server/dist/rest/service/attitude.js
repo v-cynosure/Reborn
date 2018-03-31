@@ -23,7 +23,6 @@ class Attitude extends base_1.default {
         await this.ctx.model.user.update({ username }, { $inc: { staredCount: inc } });
     }
     async starList() {
-        console.log(this.currentUserName());
         const users = await this.ctx.model.user
             .find({ username: this.currentUserName() })
             .populate('star');

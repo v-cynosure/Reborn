@@ -2,15 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("koa-jwt");
 const jsonwebtoken = require("jsonwebtoken");
-const dev_1 = require("../../config/dev");
+const config = require('../../config/config.default');
 class Auth {
     static signToken(username) {
-        return jsonwebtoken.sign(username, dev_1.default.token.secret);
+        return jsonwebtoken.sign(username, config.token.secret);
     }
     static verifyToken() {
         return jwt({
-            secret: dev_1.default.token.secret,
-        }).unless({ path: dev_1.default.auth.excludes });
+            secret: config.token.secret,
+        }).unless({ path: config.auth.excludes });
     }
     static errorHandle(ctx, next) {
         return next().catch((err) => {

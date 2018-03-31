@@ -47,7 +47,6 @@ class Attitude extends Service {
     }
 
     async starList() {
-        console.log(this.currentUserName())
         const users = await this.ctx.model.user
             .find({ username: this.currentUserName() })
             .populate('star')
