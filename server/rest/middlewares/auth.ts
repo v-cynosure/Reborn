@@ -1,7 +1,8 @@
 import * as Koa from 'koa'
 import * as jwt from 'koa-jwt'
 import * as jsonwebtoken from 'jsonwebtoken'
-import config from '../../config/dev'
+
+const config = require('../../config/config.default')
 
 class Auth {
     static signToken(username: string) {

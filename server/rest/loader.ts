@@ -11,6 +11,7 @@ class Loader {
 
     constructor(app: Koa) {
         this.app = app
+        this.loadConfig()
     }
 
     /**
@@ -40,7 +41,11 @@ class Loader {
 
         Object.defineProperty(this.app.context, 'model', {
             get() {
-                let loaded = {}
+                if (!(<any>this)['modelCache']) {
+                    ;(<any>this)['modelCache'] = {}
+                }
+
+                const loaded = (<any>this)['modelCache']
                 dirs.forEach(dir => {
                     const splits = dir.split('.')
                     if (
@@ -73,10 +78,10 @@ class Loader {
         Object.defineProperty(this.app.context, 'service', {
             get() {
                 // set cache
-                if (!(<any>this)['cache']) {
-                    ;(<any>this)['cache'] = {}
+                if (!(<any>this)['serviceCache']) {
+                    ;(<any>this)['serviceCache'] = {}
                 }
-                const loaded = (<any>this)['cache']
+                const loaded = (<any>this)['serviceCache']
 
                 if (!loaded['service']) {
                     loaded['service'] = {}
@@ -123,7 +128,6 @@ class Loader {
      */
     loadRouter() {
         this.loadModel()
-        this.loadConfig()
         this.loadService()
         this.loadController()
 

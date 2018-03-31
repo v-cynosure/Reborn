@@ -4,7 +4,6 @@ import * as jwt from 'koa-jwt'
 import * as cors from 'kcors'
 import * as koaLogger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
-import config from './config/dev'
 import { initMongodb, Auth } from './rest/middlewares'
 import Loader from './rest/loader'
 
@@ -12,6 +11,9 @@ const app = new Koa()
 
 // include router loader and controller loader
 const loader = new Loader(app)
+
+// config
+const config = (<any>app).config
 
 // mongoose
 initMongodb(config.mongodb)

@@ -9,6 +9,7 @@ class Loader {
         this.router = new Router();
         this.controller = {};
         this.app = app;
+        this.loadConfig();
     }
     /**
      * read all config in config dir and concat
@@ -32,7 +33,11 @@ class Loader {
         const dirs = fs.readdirSync(__dirname + '/models');
         Object.defineProperty(this.app.context, 'model', {
             get() {
-                let loaded = {};
+                if (!this['modelCache']) {
+                    ;
+                    this['modelCache'] = {};
+                }
+                const loaded = this['modelCache'];
                 dirs.forEach(dir => {
                     const splits = dir.split('.');
                     if (!splits.includes('map') &&
@@ -61,11 +66,11 @@ class Loader {
         Object.defineProperty(this.app.context, 'service', {
             get() {
                 // set cache
-                if (!this['cache']) {
+                if (!this['serviceCache']) {
                     ;
-                    this['cache'] = {};
+                    this['serviceCache'] = {};
                 }
-                const loaded = this['cache'];
+                const loaded = this['serviceCache'];
                 if (!loaded['service']) {
                     loaded['service'] = {};
                     service.forEach(dir => {
@@ -105,7 +110,6 @@ class Loader {
      */
     loadRouter() {
         this.loadModel();
-        this.loadConfig();
         this.loadService();
         this.loadController();
         const r = blueprint_1.default.getRoute();
