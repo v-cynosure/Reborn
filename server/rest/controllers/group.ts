@@ -37,6 +37,7 @@ class Group extends Controller {
                     code.USER_LIST_GET_ERROR_MSG
                 )
             }
+
             this.emit(
                 code.USER_LIST_GET_SUCCESS,
                 code.USER_LIST_GET_SUCCESS_MSG,
@@ -47,14 +48,53 @@ class Group extends Controller {
         }
     }
 
-    @bp.get('/api/users/:department')
+    @bp.get('/api/users/department/:department')
     async getUsersByDepartment() {
-        const { department } = this.ctx.params
-        this.getUserList({ department })
+        try {
+            const condition = this.ctx.params
+            const user = await this.ctx.service.group.filter(condition)
+
+            if (!user) {
+                return this.emit(
+                    code.USER_GET_INFO_ERROR,
+                    code.USER_GET_INFO_ERROR_MSG
+                )
+            }
+            this.emit(
+                code.USER_GET_INFO_SUCCESS,
+                code.USER_GET_INFO_SUCCESS_MSG,
+                user
+            )
+        } catch (error) {
+            this.ctx.throw(code.SERVER_ERROR)
+            return this.emit(
+                code.USER_GET_INFO_ERROR,
+                code.USER_GET_INFO_ERROR_MSG
+            )
+        }
     }
 
-    @bp.get('/api/users/search')
+    @bp.get('/api/users/search/:keyword')
     async getUserBySearch() {
+        try {
+            const condition = this.ctx.params
+            console.log(JSON.stringify(condition))
+            const user = await this.ctx.service.group.search(condition)
+            await this.ctx.service.group.counter(user)
+            if (!user) {
+                return this.emit(
+                    code.USER_GET_INFO_ERROR,
+                    code.USER_GET_INFO_ERROR_MSG
+                )
+            }
+            this.emit(
+                code.USER_GET_INFO_SUCCESS,
+                code.USER_GET_INFO_SUCCESS_MSG,
+                user
+            )
+        } catch (error) {
+            this.ctx.throw(code.SERVER_ERROR)
+        }
     }
 }
 

@@ -7,7 +7,7 @@ class User extends Service {
         const user = await this.ctx.model.user.findOne({ username }, infoList)
 
         if (user) return user
-        return null
+        // return null
     }
 
     async checkPassword(password1: any, password2: any) {

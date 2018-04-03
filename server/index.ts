@@ -36,6 +36,7 @@ app.use(bodyParser())
 // implement all api
 app.use(loader.loadRouter())
 
+
 app.listen(config.port, () => {
     console.log(`✅ The server is running at http://localhost:${config.port}/`)
 })

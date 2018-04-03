@@ -12,7 +12,10 @@ module.exports = {
         userListInfo: ['username', 'isUpdated'],
         sortRule: {
             createdAt: 1,
-        }
-    }
+        },
+    },
+    search: {
+        // 模糊查询时支持的字段
+        words: ['username'],
+    },
 }
-
