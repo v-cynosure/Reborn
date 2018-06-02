@@ -1,18 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import media from '../utils/mediaquery'
-import { Logo, Menu, Search, Dropdown } from './index'
 
 export interface HeaderProps {
-    style?: object
+    style?: React.CSSProperties
     logo?: string
     children?: React.ReactNode
-}
-
-export interface HeaderInnerProps {
-    media?: {
-        desktop?: number
-    }
 }
 
 const HeaderWrapper = styled.div`
@@ -25,16 +18,13 @@ const HeaderWrapper = styled.div`
 const HeaderInner = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 960px;
+    width: 80%;
     margin: 0 auto;
     ${media.desktop`
-        width: 960px;
+        width: 80%;
     `};
     ${media.tablet`
-        width: 100%;
-    `};
-    ${media.phone`
-        width: 100%;
+        width: 90%;
     `};
 `
 

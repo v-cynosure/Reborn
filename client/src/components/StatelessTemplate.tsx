@@ -1,12 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-export interface XProps {}
-
-const XWrapper = styled.div``
-
-const StatelessComponent: React.StatelessComponent<XProps> = props => {
-    return <XWrapper>{}</XWrapper>
+export interface CardProps {
+    style?: React.CSSProperties
 }
 
-export default StatelessComponent
+const CardWrapper = styled.div``
+
+const Card: React.StatelessComponent<CardProps> = ({ style }) => {
+    return <CardWrapper style={style}>{}</CardWrapper>
+}
+
+export default Card

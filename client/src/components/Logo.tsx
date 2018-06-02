@@ -2,14 +2,13 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 export interface LogoProps {
-    style?: object
+    style?: React.CSSProperties
     src?: string
 }
 
 const LogoWrapper = styled.div`
     box-sizing: border-box;
     height: 100%;
-    margin: 0 20px;
     cursor: pointer;
 `
 const LogoImg = styled.img`

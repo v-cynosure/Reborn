@@ -6,7 +6,7 @@ const sizes = {
     phone: 376,
 }
 
-export const media: any = Object.keys(sizes).reduce((acc, label) => {
+const media: any = Object.keys(sizes).reduce((acc, label) => {
     const remSize = (sizes[label] + 1) / 16
     acc[label] = (...args: Array<any>) => css`
         @media (max-width: ${remSize}rem) {

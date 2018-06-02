@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import media from '../utils/mediaquery'
 
 export interface SearchProps {
-    style?: object
+    style?: React.CSSProperties
     placeholder?: string
     focusWidth?: string
     animation?: boolean
@@ -46,7 +46,7 @@ const SearchInput = styled.input`
     ${media.phone`
         width: 100px;
         &:focus {
-            width:100px;
+            width:150px;
         }
     `};
 `

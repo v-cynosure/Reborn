@@ -1,16 +1,19 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-export interface XProps {}
+export interface XProps {
+    style?: React.CSSProperties
+}
 
 const XWrapper = styled.div``
 
-class Template extends React.Component<XProps, {}> {
+class X extends React.Component<XProps, {}> {
     static defaultProps = {}
 
     render() {
-        return <XWrapper>{}</XWrapper>
+        const { style } = this.props
+        return <XWrapper style={style}>{}</XWrapper>
     }
 }
 
-export default Template
+export default X
